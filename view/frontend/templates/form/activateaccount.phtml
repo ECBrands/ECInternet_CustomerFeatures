@@ -1,0 +1,48 @@
+<?php
+/**
+ * Copyright (C) EC Brands Corporation - All Rights Reserved
+ * Contact Licensing@ECInternet.com for use guidelines
+ */
+declare(strict_types=1);
+?>
+
+<?php /** @var \ECInternet\CustomerFeatures\Block\Customer\Account\ActivateAccount $block */ ?>
+<?php /** @var \Magento\Framework\Escaper $escaper */ ?>
+
+<form class="form password activate"
+      action="<?= $escaper->escapeUrl($block->getUrl('*/*/activateaccountpost')) ?>"
+      method="post"
+      id="form-validate"
+      data-mage-init='{"validation":{}}'>
+    <fieldset class="fieldset" data-hasrequired="<?= $escaper->escapeHtmlAttr(__('* Required Fields')) ?>">
+        <div class="field note">
+            <?= $escaper->escapeHtml(__($block->getActivationNote())) ?>
+        </div>
+        <div class="field email required">
+            <label for="email_address" class="label"><span><?= $escaper->escapeHtml(__('Email')) ?></span></label>
+            <div class="control">
+                <input type="email"
+                       name="email"
+                       alt="email"
+                       id="email_address"
+                       class="input-text"
+                       value="<?= $escaper->escapeHtmlAttr($block->getEmailValue()) ?>"
+                       data-mage-init='{"mage/trim-input":{}}'
+                       data-validate="{required:true, 'validate-email':true}">
+            </div>
+        </div>
+        <?= $block->getChildHtml('form_additional_info') ?>
+    </fieldset>
+    <div class="actions-toolbar">
+        <div class="primary">
+            <button type="submit" class="action submit primary">
+                <span><?= $escaper->escapeHtml(__('Activate My Account')) ?></span>
+            </button>
+        </div>
+        <div class="secondary">
+            <a class="action back" href="<?= $escaper->escapeUrl($block->getLoginUrl()) ?>">
+                <span><?= $escaper->escapeHtml(__('Go back')) ?></span>
+            </a>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,32 @@
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<!--@subject {{trans "Your %store_name account is almost ready...." store_name=$store.getFrontendName()}} @-->
+<!--@vars {
+"var customer.name":"Customer Name",
+"var this.getUrl($store, 'customer/account/createPassword/')":"Reset Password URL"
+} @-->
+{{template config_path="design/email/header_template"}}
+
+<p class="greeting">{{trans "%name," name=$customer.name}}</p>
+<p>{{trans "An account was recently created for you on $store_name" store_name=$store.getFrontendName()}}</p>
+<p>{{trans "To set a password for your account and activate it, click the button below."}}</p>
+
+<table class="button" width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+        <td>
+            <table class="inner-wrapper" border="0" cellspacing="0" cellpadding="0" align="center">
+                <tr>
+                    <td align="center">
+                        <a href="{{var this.getUrl($store,'customer/account/activateAccount/')}}" target="_blank">{{trans "Activate Account"}}</a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+{{template config_path="design/email/footer_template"}}

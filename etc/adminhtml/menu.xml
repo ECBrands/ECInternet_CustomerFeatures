@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+	<menu>
+		<add id="ECInternet_CustomerFeatures::menu"
+		     title="Customer Features"
+		     translate="title"
+		     module="ECInternet_CustomerFeatures"
+		     sortOrder="50"
+		     parent="ECInternet_Base::base"
+		     resource="ECInternet_CustomerFeatures::menu" />
+
+		<add id="ECInternet_CustomerFeatures::settings"
+		     title="Settings"
+		     translate="title"
+		     module="ECInternet_CustomerFeatures"
+		     parent="ECInternet_CustomerFeatures::menu"
+		     sortOrder="10"
+		     action="adminhtml/system_config/edit/section/customer_features"
+		     resource="ECInternet_CustomerFeatures::settings" />
+	</menu>
+</config>

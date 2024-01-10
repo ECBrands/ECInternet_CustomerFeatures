@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+	<!-- aroundAuthenticate() - Disallows Customers from logging in if they have a false 'ecinternet_is_active' value -->
+	<!-- aroundInitiatePasswordReset() - Adds error handling for failed password reset emails -->
+	<!-- aroundResetPassword() - Update 'ecinternet_customer_activated' on the Customer -->
+	<!-- beforeCreateAccount() - Sets custom password value for new Customers -->
+	<type name="Magento\Customer\Model\AccountManagement">
+		<plugin name="ecinternet_customerfeatures-customer_model_accountmanagement"
+		        type="ECInternet\CustomerFeatures\Plugin\Customer\Model\AccountManagementPlugin" />
+	</type>
+
+	<!-- aroundNewAccount() - Disable Customer Welcome email -->
+	<type name="Magento\Customer\Model\EmailNotification">
+		<plugin name="ecinternet_customerfeatures-customer_model_emailnotification"
+		        type="ECInternet\CustomerFeatures\Plugin\Customer\Model\EmailNotificationPlugin" />
+	</type>
+
+	<!-- Custom Logger -->
+	<type name="ECInternet\CustomerFeatures\Logger\Logger">
+		<arguments>
+			<argument name="name" xsi:type="string">CustomerFeatures</argument>
+			<argument name="handlers" xsi:type="array">
+				<item name="system" xsi:type="object">ECInternet\CustomerFeatures\Logger\Handler</item>
+			</argument>
+		</arguments>
+	</type>
+</config>

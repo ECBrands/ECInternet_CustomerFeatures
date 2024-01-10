@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+	<system>
+		<section id="customer_features" translate="label" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+			<class>separator-top</class>
+			<label>Customer Features</label>
+			<tab>ecinternet</tab>
+			<resource>ECInternet_CustomerFeatures::settings</resource>
+			<group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+				<label>General Configuration</label>
+				<field id="enable" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+					<label>Enable Module</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+				</field>
+				<field id="debug_logging" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+					<label>Enable Debug Logging</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+					<depends>
+						<field id="enable">1</field>
+					</depends>
+				</field>
+				<field id="disallow_login_if_inactive" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+					<label>Disallow login if Customer is inactive</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+					<depends>
+						<field id="enable">1</field>
+					</depends>
+				</field>
+				<field id="show_additional_info" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+					<label>Show Additional Information in Customer Account Screen</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+					<depends>
+						<field id="enable">1</field>
+					</depends>
+				</field>
+			</group>
+			<group id="new_account" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+				<label>New Account</label>
+				<field id="disable_customer_registration" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Disable Customer Registration</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+				</field>
+				<field id="disable_customer_welcome_email" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Disable Customer Welcome Email</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+				</field>
+				<field id="enable_new_account_password_override" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+					<label>Enable New Account Password Override</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+				</field>
+				<field id="new_account_password" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+					<label>Default New Account Password</label>
+					<depends>
+						<field id="enable_new_account_password_override">1</field>
+					</depends>
+				</field>
+			</group>
+			<group id="customer_group" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+				<label>Customer Group</label>
+				<field id="limit_add_address" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+					<label>Limit Customer Groups which can add addresses</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+				</field>
+				<field id="limit_add_address_groups" translate="label" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+					<label>Customer Groups which can addresses</label>
+					<source_model>Magento\Customer\Model\Config\Source\Group</source_model>
+					<depends>
+						<field id="limit_add_address">1</field>
+					</depends>
+				</field>
+				<field id="limit_edit_address" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+					<label>Limit Customer Groups which can add addresses</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+				</field>
+				<field id="limit_edit_address_groups" translate="label" type="multiselect" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+					<label>Customer Groups which edit addresses</label>
+					<source_model>Magento\Customer\Model\Config\Source\Group</source_model>
+					<depends>
+						<field id="limit_edit_address">1</field>
+					</depends>
+				</field>
+			</group>
+			<group id="account_activation" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+				<label>Account Activation</label>
+				<field id="enable" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+					<label>Enable Account Activation</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+				</field>
+				<field id="activate_account_template" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+					<label>Activate Account Template</label>
+					<comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+					<source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+				</field>
+				<field id="enable_cron" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+					<label>Enable Account Activation Automated Emails</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+				</field>
+				<field id="activation_notice_template" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+					<label>Activate Account Notice Template</label>
+					<comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+					<source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+				</field>
+				<field id="cron_customers_per" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
+					<label>Max emails per cron run</label>
+				</field>
+			</group>
+		</section>
+	</system>
+</config>

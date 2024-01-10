@@ -1,0 +1,59 @@
+<?php
+/**
+ * Copyright (C) EC Brands Corporation - All Rights Reserved
+ * Contact Licensing@ECInternet.com for use guidelines
+ */
+declare(strict_types=1);
+?>
+
+<?php /** @var \Magento\Customer\Block\Form\Login\Info $block */ ?>
+<?php /** @var \Magento\Framework\Escaper $escaper */ ?>
+
+<?php
+/** @var \ECInternet\CustomerFeatures\ViewModel\CustomerAccountLogin $viewModel */
+$viewModel = $block->getViewModel();
+?>
+
+<?php if ($block->getRegistration()->isAllowed()): ?>
+<div class="block block-new-customer">
+    <div class="block-title">
+        <strong id="block-new-customer-heading" role="heading" aria-level="2">
+            <?= $escaper->escapeHtml(__('New Customers')) ?>
+        </strong>
+    </div>
+    <div class="block-content" aria-labelledby="block-new-customer-heading">
+        <p>
+            <?= $escaper->escapeHtml(__($viewModel->getCreateAccountNote())) ?>
+        </p>
+        <div class="actions-toolbar">
+            <div class="primary">
+                <a href="<?= $escaper->escapeUrl($block->getCreateAccountUrl()) ?>" class="action create primary">
+                    <span><?= $escaper->escapeHtml(__('Create an Account')) ?></span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
+<?php if ($viewModel->isAccountActivationEnabled()) { ?>
+<div class="block block-activate-customer">
+    <div class="block-title">
+        <strong id="block-activate-customer-heading" role="heading" aria-level="2">
+            <?= $escaper->escapeHtml(__('Account Activation')) ?>
+        </strong>
+    </div>
+    <div class="block-content" aria-labelledby="block-activate-customer-heading">
+        <p>
+            <?= $escaper->escapeHtml(__($viewModel->getActivationNote())) ?>
+        </p>
+        <div class="actions-toolbar">
+            <div class="primary">
+                <a href="<?= $escaper->escapeUrl($viewModel->getActivateAccountUrl()) ?>" class="action activate primary">
+                    <span><?= $escaper->escapeHtml(__('Activate Account')) ?></span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<?php } ?>

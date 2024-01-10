@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+	<default>
+		<customer_features>
+			<general>
+				<enable>1</enable>
+			</general>
+			<account_activation>
+				<activate_account_template>customer_account_activate_email_template</activate_account_template>
+				<activation_notice_template>customer_account_activate_email_cron_template</activation_notice_template>
+				<cron_customers_per>15</cron_customers_per>
+			</account_activation>
+		</customer_features>
+	</default>
+</config>

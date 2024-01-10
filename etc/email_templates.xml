@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+	<template id="customer_account_activate_email_template"
+	          label="Activate Account Confirmation"
+	          file="account_activate_confirmation.html"
+	          type="html"
+	          module="ECInternet_CustomerFeatures"
+	          area="frontend" />
+
+	<template id="customer_features_account_activation_activate_account_template"
+	          label="Activate Account Confirmation"
+	          file="account_activate_confirmation.html"
+	          type="html"
+	          module="ECInternet_CustomerFeatures"
+	          area="frontend" />
+
+	<template id="customer_account_activate_email_cron_template"
+	          label="Activate Account Notice"
+	          file="account_activate_notice.html"
+	          type="html"
+	          module="ECInternet_CustomerFeatures"
+	          area="frontend" />
+
+	<template id="customer_features_account_activation_activation_notice_template"
+	          label="Activate Account Notice"
+	          file="account_activate_notice.html"
+	          type="html"
+	          module="ECInternet_CustomerFeatures"
+	          area="frontend" />
+</config>

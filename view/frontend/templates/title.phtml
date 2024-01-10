@@ -1,0 +1,45 @@
+<?php
+/**
+ * Copyright (C) EC Brands Corporation - All Rights Reserved
+ * Contact Licensing@ECInternet.com for use guidelines
+ */
+declare(strict_types=1);
+
+/**
+ * @var $block \Magento\Theme\Block\Html\Title
+ */
+
+/**
+ * @var \Magento\Framework\Escaper $escaper
+ */
+
+/** @var \ECInternet\CustomerFeatures\ViewModel\CustomerAccountIndex $viewModel */
+$viewModel = $block->getViewModel();
+
+$cssClass = $block->getCssClass() ? ' ' . $block->getCssClass() : '';
+$title = '';
+if (!empty($block->getPageHeading())) {
+    $title = '<span class="base" data-ui-id="page-title-wrapper" ' .  $block->getAddBaseAttribute() . '>'
+        . $escaper->escapeHtml($block->getPageHeading()) . '</span>';
+}
+?>
+<?php if ($title): ?>
+<div class="page-title-wrapper<?= /* @noEscape */ $cssClass ?>">
+    <h1 class="page-title"
+        <?php if ($block->getId()): ?> id="<?= /* @noEscape */ $block->getId() ?>" <?php endif; ?>
+        <?php if ($block->getAddBaseAttributeAria()): ?>
+            aria-labelledby="<?= /* @noEscape */ $block->getAddBaseAttributeAria() ?>"
+        <?php endif; ?>>
+        <?= /* @noEscape */ $title ?>
+    </h1>
+
+    <?php if ($viewModel->shouldShowAdditionalInformation()) { ?>
+        <?php $customerNumber = $viewModel->getCurrentCustomerNumber() ?>
+        <?php if (!empty($customerNumber)) { ?>
+            <h4 class="customer-number">(<?= /* @noEscape */ $customerNumber ?>)</h4>
+        <?php } ?>
+    <?php } ?>
+
+    <?= $block->getChildHtml() ?>
+</div>
+<?php endif; ?>

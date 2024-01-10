@@ -1,0 +1,31 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/** @var \ECInternet\CustomerFeatures\Block\Widget\ECInternetCompanyName $block */
+/** @var \Magento\Framework\Escaper $escaper */
+?>
+<div class="field ecinternet_company_name <?= $block->isRequired() ? 'required' : '' ?>">
+    <label for="ecinternet_company_name" class="label">
+        <span>
+            <?= $escaper->escapeHtml(__('Company Name')) ?>
+        </span>
+    </label>
+    <div class="control">
+        <?php
+        $_validationClass = $escaper->escapeHtmlAttr(
+            $this->helper(\Magento\Customer\Helper\Address::class)
+                ->getAttributeValidationClass('ecinternet_company_name')
+        );
+        ?>
+        <input type="text"
+               name="ecinternet_company_name"
+               id="ecinternet_company_name"
+               value="<?= $escaper->escapeHtmlAttr($block->getECInternetCompanyName()) ?>"
+               title="<?= $escaper->escapeHtmlAttr(__('Company Name')) ?>"
+               class="input-text <?= $_validationClass ?: '' ?> validate-length minimum-length-3 maximum-length-35"
+        >
+    </div>
+</div>

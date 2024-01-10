@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+/* Copyright (C) EC Brands Corporation - All Rights Reserved
+** Contact Licensing@ECInternet.com for use guidelines
+*/
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      layout="1column"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <title>Activate Your Account</title>
+    </head>
+    <body>
+        <referenceBlock name="root">
+            <action method="setHeaderTitle">
+                <argument translate="true" name="title" xsi:type="string">Account Activation</argument>
+            </action>
+        </referenceBlock>
+        <referenceContainer name="content">
+            <block class="ECInternet\CustomerFeatures\Block\Customer\Account\Activateaccount"
+                   name="activateAccount"
+                   template="ECInternet_CustomerFeatures::form/activateaccount.phtml">
+                <container name="form.additional.info" as="form_additional_info"/>
+            </block>
+        </referenceContainer>
+    </body>
+</page>
