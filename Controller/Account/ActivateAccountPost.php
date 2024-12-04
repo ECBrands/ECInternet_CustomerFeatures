@@ -15,10 +15,10 @@ use Magento\Framework\Escaper;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\SecurityViolationException;
 use Magento\Framework\Validator\EmailAddress;
+use Magento\Framework\Validator\ValidatorChain;
 use ECInternet\CustomerFeatures\Helper\Data;
 use ECInternet\CustomerFeatures\Logger\Logger;
 use Exception;
-use Zend_Validate;
 
 /**
  * ActivateAccountPost Account controller
@@ -28,24 +28,9 @@ use Zend_Validate;
 class ActivateAccountPost extends ForgotPasswordPost
 {
     /**
-     * @var \Magento\Customer\Api\AccountManagementInterface
-     */
-    protected $customerAccountManagement;
-
-    /**
-     * @var \Magento\Customer\Model\Session
-     */
-    protected $session;
-
-    /**
-     * @var \Magento\Framework\Escaper
-     */
-    protected $escaper;
-
-    /**
      * @var \ECInternet\CustomerFeatures\Logger\Logger
      */
-    private $_logger;
+    private $logger;
 
     /**
      * ActivateAccountPost constructor.
@@ -65,17 +50,14 @@ class ActivateAccountPost extends ForgotPasswordPost
     ) {
         parent::__construct($context, $customerSession, $customerAccountManagement, $escaper);
 
-        $this->session                   = $customerSession;
-        $this->customerAccountManagement = $customerAccountManagement;
-        $this->escaper                   = $escaper;
-        $this->_logger                   = $logger;
+        $this->logger = $logger;
     }
 
     /**
      * Forgot customer password action
      *
      * @return \Magento\Framework\Controller\Result\Redirect
-     * @throws \Zend_Validate_Exception
+     * @throws \Magento\Framework\Validator\ValidateException
      */
     public function execute()
     {
@@ -84,7 +66,7 @@ class ActivateAccountPost extends ForgotPasswordPost
 
         $email = (string)$this->getRequest()->getPost('email');
         if ($email) {
-            if (!Zend_Validate::is($email, EmailAddress::class)) {
+            if (!ValidatorChain::is($email, EmailAddress::class)) {
                 $this->session->setForgottenEmail($email);
                 $this->messageManager->addErrorMessage(
                     __('The email address is incorrect. Verify the email address and try again.')
@@ -145,6 +127,6 @@ class ActivateAccountPost extends ForgotPasswordPost
      */
     private function log(string $message)
     {
-        $this->_logger->info('Controller/Account/ActivateAccountPost - ' . $message);
+        $this->logger->info('Controller/Account/ActivateAccountPost - ' . $message);
     }
 }
