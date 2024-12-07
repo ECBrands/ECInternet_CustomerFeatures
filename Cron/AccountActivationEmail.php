@@ -10,6 +10,7 @@ namespace ECInternet\CustomerFeatures\Cron;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CustomerCollectionFactory;
+use Magento\Framework\Exception\LocalizedException;
 use ECInternet\CustomerFeatures\Helper\Data;
 use ECInternet\CustomerFeatures\Logger\Logger;
 use Exception;
@@ -22,6 +23,8 @@ use Exception;
  */
 class AccountActivationEmail
 {
+    const CONFIG_PATH_ACTIVATION_NOTICE_TEMPLATE = 'customer_features/account_activation/activation_notice_template';
+
     /**
      * @var \Magento\Customer\Api\CustomerRepositoryInterface
      */
@@ -96,7 +99,7 @@ class AccountActivationEmail
                 $this->markCustomerActivationEmailSent($customerData);
 
                 $this->log("AccountActivationEmail() - Sending cron email to customer [$customerEmail]...");
-                $this->_helper->sendAccountActivationNoticeEmail($customerData);
+                $this->sendAccountActivationNoticeEmail($customerData);
             } catch (Exception $e) {
                 $this->log('AccountActivationEmail()', ['exception' => $e->getMessage()]);
             }
@@ -140,6 +143,24 @@ class AccountActivationEmail
 
         $customer->setCustomAttribute(Data::ATTRIBUTE_CUSTOMER_ACTIVATION_EMAIL_SENT, 1);
         $this->_customerRepository->save($customer);
+    }
+
+    /**
+     * Send email notifying customer they need to activate their account
+     *
+     * @param CustomerInterface $customer
+     *
+     * @return void
+     * @throws \Magento\Framework\Exception\MailException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws LocalizedException
+     */
+    public function sendAccountActivationNoticeEmail(
+        CustomerInterface $customer
+    ) {
+        $this->log('sendAccountActivationNoticeEmail()');
+
+        $this->_helper->sendEmail($customer, self::CONFIG_PATH_ACTIVATION_NOTICE_TEMPLATE);
     }
 
     /**

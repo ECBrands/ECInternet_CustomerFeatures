@@ -28,6 +28,8 @@ use Exception;
  */
 class AccountManagementPlugin
 {
+    const CONFIG_PATH_ACTIVATION_TEMPLATE = 'customer_features/account_activation/activate_account_template';
+
     /**
      * @var \Magento\Customer\Api\CustomerRepositoryInterface
      */
@@ -150,12 +152,12 @@ class AccountManagementPlugin
 
             // Let's make sure this is the right template file for our needs and take over.
             if ($this->helper->isModuleEnabled() && $template == Data::EMAIL_ACTIVATE_TEMPLATE) {
-                $this->log("aroundInitiatePasswordReset() - Caught InputException with template: [$template]");
+                $this->log("aroundInitiatePasswordReset() - Caught InputException with template: [$template]: [{$e->getMessage()}].");
 
                 // Load customer by email
                 $customer = $this->customerRepository->get($email, $websiteId);
                 try {
-                    $this->helper->sendAccountActivationConfirmationEmail($customer);
+                    $this->sendAccountActivationConfirmationEmail($customer);
 
                     return true;
                 } catch (MailException $e) {
@@ -190,10 +192,15 @@ class AccountManagementPlugin
         /* @noinspection PhpMissingParamTypeInspection */ $resetToken,
         /* @noinspection PhpMissingParamTypeInspection */ $newPassword
     ) {
-        $this->log('aroundResetPassword()', ['email' => $email]);
+        $this->log('aroundResetPassword()', [
+            'email'       => $email,
+            'resetToken'  => $resetToken,
+            'newPassword' => $newPassword
+        ]);
 
         // Run base functionality
         $result = $proceed($email, $resetToken, $newPassword);
+        $this->log('aroundResetPassword() - Result: ' . ($result ? 'true' : 'false'));
 
         if ($result === true) {
             $this->activateAccount($email);
@@ -229,6 +236,24 @@ class AccountManagementPlugin
         }
 
         return [$customer, $password, $redirectUrl];
+    }
+
+    /**
+     * Send email with reset password confirmation link
+     *
+     * @param \Magento\Customer\Api\Data\CustomerInterface $customer
+     *
+     * @return void
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\MailException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    private function sendAccountActivationConfirmationEmail(
+        CustomerInterface $customer
+    ) {
+        $this->log('sendAccountActivationConfirmationEmail()');
+
+        $this->helper->sendEmail($customer, self::CONFIG_PATH_ACTIVATION_TEMPLATE);
     }
 
     /**
@@ -274,6 +299,8 @@ class AccountManagementPlugin
      */
     private function getCustomerByEmail(string $email)
     {
+        $this->log('getCustomerByEmail()', ['email' => $email]);
+
         return $this->customerRepository->get($email, $this->storeManager->getStore()->getWebsiteId());
     }
 

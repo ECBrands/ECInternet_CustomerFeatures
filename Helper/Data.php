@@ -52,11 +52,7 @@ class Data extends AbstractHelper
 
     const CONFIG_PATH_ACTIVATION_ENABLE             = 'account_activation/enable';
 
-    const CONFIG_PATH_ACTIVATION_TEMPLATE           = 'customer_features/account_activation/activate_account_template';
-
     const CONFIG_PATH_ACTIVATION_ENABLE_CRON        = 'account_activation/enable_cron';
-
-    const CONFIG_PATH_ACTIVATION_NOTICE_TEMPLATE    = 'customer_features/account_activation/activation_notice_template';
 
     const CONFIG_PATH_ACTIVATION_CRON_MAX_EMAILS    = 'account_activation/cron_customers_per';
 
@@ -378,42 +374,6 @@ class Data extends AbstractHelper
     }
 
     /**
-     * Send email with reset password confirmation link
-     *
-     * @param \Magento\Customer\Api\Data\CustomerInterface $customer
-     *
-     * @return void
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\MailException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     */
-    public function sendAccountActivationConfirmationEmail(
-        CustomerInterface $customer
-    ) {
-        $this->log('sendAccountActivationConfirmationEmail()');
-
-        $this->sendEmail($customer, self::CONFIG_PATH_ACTIVATION_TEMPLATE);
-    }
-
-    /**
-     * Send email notifying customer they need to activate their account
-     *
-     * @param CustomerInterface $customer
-     *
-     * @return void
-     * @throws \Magento\Framework\Exception\MailException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @throws LocalizedException
-     */
-    public function sendAccountActivationNoticeEmail(
-        CustomerInterface $customer
-    ) {
-        $this->log('sendAccountActivationNoticeEmail()');
-
-        $this->sendEmail($customer, self::CONFIG_PATH_ACTIVATION_NOTICE_TEMPLATE);
-    }
-
-    /**
      * Send email to Customer
      *
      * @param \Magento\Customer\Api\Data\CustomerInterface $customer
@@ -423,7 +383,7 @@ class Data extends AbstractHelper
      * @throws \Magento\Framework\Exception\MailException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    private function sendEmail(
+    public function sendEmail(
         CustomerInterface $customer,
         string $template
     ) {
@@ -434,14 +394,18 @@ class Data extends AbstractHelper
             $storeId = $customer->getStoreId();
         }
 
-        $customerEmailData = $this->getFullCustomerObject($customer);
-        $this->sendEmailTemplate(
-            $customer,
-            $template,
-            self::CONFIG_PATH_FORGOT_EMAIL_IDENTITY,
-            ['customer' => $customerEmailData, 'store' => $this->_storeManager->getStore($storeId)],
-            $storeId
-        );
+        if (is_numeric($storeId)) {
+            $customerEmailData = $this->getFullCustomerObject($customer);
+            $this->sendEmailTemplate(
+                $customer,
+                $template,
+                self::CONFIG_PATH_FORGOT_EMAIL_IDENTITY,
+                ['customer' => $customerEmailData, 'store' => $this->_storeManager->getStore($storeId)],
+                (int)$storeId
+            );
+        } else {
+            $this->log('sendEmail() - Non-numeric Store ID', ['storeId' => $storeId]);
+        }
     }
 
     /**
