@@ -13,6 +13,7 @@ use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CustomerC
 use Magento\Framework\Exception\LocalizedException;
 use ECInternet\CustomerFeatures\Helper\Data;
 use ECInternet\CustomerFeatures\Logger\Logger;
+use ECInternet\CustomerFeatures\Model\Config;
 use Exception;
 
 /**
@@ -23,27 +24,32 @@ use Exception;
  */
 class AccountActivationEmail
 {
-    const CONFIG_PATH_ACTIVATION_NOTICE_TEMPLATE = 'customer_features/account_activation/activation_notice_template';
+    private const CONFIG_PATH_ACTIVATION_NOTICE_TEMPLATE = 'customer_features/account_activation/activation_notice_template';
 
     /**
      * @var \Magento\Customer\Api\CustomerRepositoryInterface
      */
-    private $_customerRepository;
+    private $customerRepository;
 
     /**
      * @var \Magento\Customer\Model\ResourceModel\Customer\CollectionFactory
      */
-    private $_customerCollectionFactory;
+    private $customerCollectionFactory;
 
     /**
      * @var \ECInternet\CustomerFeatures\Helper\Data
      */
-    private $_helper;
+    private $helper;
 
     /**
      * @var \ECInternet\CustomerFeatures\Logger\Logger
      */
-    private $_logger;
+    private $logger;
+
+    /**
+     * @var \ECInternet\CustomerFeatures\Model\Config
+     */
+    private $config;
 
     /**
      * AccountActivationEmail constructor.
@@ -52,17 +58,20 @@ class AccountActivationEmail
      * @param \Magento\Customer\Model\ResourceModel\Customer\CollectionFactory $customerCollectionFactory
      * @param \ECInternet\CustomerFeatures\Helper\Data                         $helper
      * @param \ECInternet\CustomerFeatures\Logger\Logger                       $logger
+     * @param \ECInternet\CustomerFeatures\Model\Config                        $config
      */
     public function __construct(
         CustomerRepositoryInterface $customerRepository,
         CustomerCollectionFactory $customerCollectionFactory,
         Data $helper,
-        Logger $logger
+        Logger $logger,
+        Config $config
     ) {
-        $this->_customerRepository        = $customerRepository;
-        $this->_customerCollectionFactory = $customerCollectionFactory;
-        $this->_helper                    = $helper;
-        $this->_logger                    = $logger;
+        $this->customerRepository        = $customerRepository;
+        $this->customerCollectionFactory = $customerCollectionFactory;
+        $this->helper                    = $helper;
+        $this->logger                    = $logger;
+        $this->config                    = $config;
     }
 
     /**
@@ -75,13 +84,12 @@ class AccountActivationEmail
     {
         $this->log('execute()');
 
-        if (!$this->_helper->isAccountActivationCronEnabled()) {
+        if (!$this->config->isAccountActivationCronEnabled()) {
             $this->log('execute() - Account Activate cron disabled.');
-
             return $this;
         }
 
-        $maxEmailCount = $this->_helper->getAccountActivationCronMaxEmails();
+        $maxEmailCount = $this->config->getAccountActivationCronMaxEmails();
         $this->log('execute()', ['maxEmailsPerCronRun' => $maxEmailCount]);
 
         // Load unactivated customers.
@@ -118,10 +126,10 @@ class AccountActivationEmail
      */
     private function getCronJobCustomers(int $limit)
     {
-        return $this->_customerCollectionFactory->create()
+        return $this->customerCollectionFactory->create()
             ->addAttributeToSelect('*')
-            ->addAttributeToFilter(Data::ATTRIBUTE_CUSTOMER_IS_ACTIVATED, ['eq' => '0'])
-            ->addAttributeToFilter(Data::ATTRIBUTE_CUSTOMER_ACTIVATION_EMAIL_SENT, ['eq' => '0'])
+            ->addAttributeToFilter(Config::ATTRIBUTE_CUSTOMER_IS_ACTIVATED, ['eq' => '0'])
+            ->addAttributeToFilter(Config::ATTRIBUTE_CUSTOMER_ACTIVATION_EMAIL_SENT, ['eq' => '0'])
             ->setPageSize($limit)
             ->setCurPage(1)
             ->load();
@@ -141,8 +149,8 @@ class AccountActivationEmail
     ) {
         $this->log('markCustomerActivationEmailSent()', ['customerId' => $customer->getId()]);
 
-        $customer->setCustomAttribute(Data::ATTRIBUTE_CUSTOMER_ACTIVATION_EMAIL_SENT, 1);
-        $this->_customerRepository->save($customer);
+        $customer->setCustomAttribute(Config::ATTRIBUTE_CUSTOMER_ACTIVATION_EMAIL_SENT, 1);
+        $this->customerRepository->save($customer);
     }
 
     /**
@@ -160,7 +168,7 @@ class AccountActivationEmail
     ) {
         $this->log('sendAccountActivationNoticeEmail()');
 
-        $this->_helper->sendEmail($customer, self::CONFIG_PATH_ACTIVATION_NOTICE_TEMPLATE);
+        $this->helper->sendEmail($customer, self::CONFIG_PATH_ACTIVATION_NOTICE_TEMPLATE);
     }
 
     /**
@@ -173,6 +181,6 @@ class AccountActivationEmail
      */
     private function log(string $message, array $extra = [])
     {
-        $this->_logger->info('Cron/AccountActivationEmail - ' . $message, $extra);
+        $this->logger->info('Cron/AccountActivationEmail - ' . $message, $extra);
     }
 }

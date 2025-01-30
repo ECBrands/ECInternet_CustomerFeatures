@@ -16,8 +16,8 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\SecurityViolationException;
 use Magento\Framework\Validator\EmailAddress;
 use Magento\Framework\Validator\ValidatorChain;
-use ECInternet\CustomerFeatures\Helper\Data;
 use ECInternet\CustomerFeatures\Logger\Logger;
+use ECInternet\CustomerFeatures\Model\Config;
 use Exception;
 
 /**
@@ -76,10 +76,7 @@ class ActivateAccountPost extends ForgotPasswordPost
             }
 
             try {
-                $this->customerAccountManagement->initiatePasswordReset(
-                    $email,
-                    Data::EMAIL_ACTIVATE_TEMPLATE
-                );
+                $this->customerAccountManagement->initiatePasswordReset($email, Config::EMAIL_ACTIVATION_TEMPLATE);
             } catch (NoSuchEntityException $exception) {
                 // Do nothing, we don't want anyone to use this action to determine which email accounts are registered.
                 $this->log("NoSuchEntityException found - {$exception->getMessage()}.");

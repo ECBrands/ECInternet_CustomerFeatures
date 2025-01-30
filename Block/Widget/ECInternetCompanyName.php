@@ -15,11 +15,12 @@ use Magento\Customer\Helper\Address as AddressHelper;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\View\Element\Template\Context;
 use ECInternet\CustomerFeatures\Logger\Logger;
+use ECInternet\CustomerFeatures\Model\Config;
 use Exception;
 
 class ECInternetCompanyName extends AbstractWidget
 {
-    const ATTRIBUTE_CODE = 'ecinternet_company_name';
+    private const ATTRIBUTE_CODE = Config::ATTRIBUTE_CUSTOMER_COMPANY_NAME;
 
     /**
      * @var \Magento\Customer\Api\CustomerRepositoryInterface

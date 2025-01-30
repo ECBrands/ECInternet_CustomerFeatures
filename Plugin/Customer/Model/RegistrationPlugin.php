@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace ECInternet\CustomerFeatures\Plugin\Customer\Model;
 
 use Magento\Customer\Model\Registration;
-use ECInternet\CustomerFeatures\Helper\Data;
+use ECInternet\CustomerFeatures\Model\Config;
 
 /**
  * Plugin for Magento\Customer\Model\Registration
@@ -16,19 +16,19 @@ use ECInternet\CustomerFeatures\Helper\Data;
 class RegistrationPlugin
 {
     /**
-     * @var \ECInternet\CustomerFeatures\Helper\Data
+     * @var \ECInternet\CustomerFeatures\Model\Config
      */
-    private $_helper;
+    private $config;
 
     /**
      * RegistrationPlugin constructor.
      *
-     * @param \ECInternet\CustomerFeatures\Helper\Data $helper
+     * @param \ECInternet\CustomerFeatures\Model\Config $config
      */
     public function __construct(
-        Data $helper
+        Config $config
     ) {
-        $this->_helper = $helper;
+        $this->config = $config;
     }
 
     /**
@@ -43,8 +43,8 @@ class RegistrationPlugin
         /** @noinspection PhpUnusedParameterInspection */ Registration $subject,
         bool $result
     ) {
-        if ($this->_helper->isModuleEnabled()) {
-            if ($this->_helper->disableCustomerRegistration()) {
+        if ($this->config->isModuleEnabled()) {
+            if ($this->config->shouldDisableCustomerRegistration()) {
                 return false;
             }
         }

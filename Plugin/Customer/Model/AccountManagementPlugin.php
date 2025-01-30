@@ -19,6 +19,7 @@ use Magento\Framework\Message\ManagerInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use ECInternet\CustomerFeatures\Helper\Data;
 use ECInternet\CustomerFeatures\Logger\Logger;
+use ECInternet\CustomerFeatures\Model\Config;
 use Exception;
 
 /**
@@ -28,7 +29,7 @@ use Exception;
  */
 class AccountManagementPlugin
 {
-    const CONFIG_PATH_ACTIVATION_TEMPLATE = 'customer_features/account_activation/activate_account_template';
+    private const CONFIG_PATH_ACTIVATION_TEMPLATE = 'customer_features/account_activation/activate_account_template';
 
     /**
      * @var \Magento\Customer\Api\CustomerRepositoryInterface
@@ -56,6 +57,11 @@ class AccountManagementPlugin
     private $logger;
 
     /**
+     * @var \ECInternet\CustomerFeatures\Model\Config
+     */
+    private $config;
+
+    /**
      * AccountManagementPlugin constructor.
      *
      * @param \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository
@@ -63,19 +69,22 @@ class AccountManagementPlugin
      * @param \Magento\Store\Model\StoreManagerInterface        $storeManager
      * @param \ECInternet\CustomerFeatures\Helper\Data          $helper
      * @param \ECInternet\CustomerFeatures\Logger\Logger        $logger
+     * @param \ECInternet\CustomerFeatures\Model\Config         $config
      */
     public function __construct(
         CustomerRepositoryInterface $customerRepository,
         ManagerInterface $messageManager,
         StoreManagerInterface $storeManager,
         Data $helper,
-        Logger $logger
+        Logger $logger,
+        Config $config
     ) {
         $this->customerRepository = $customerRepository;
         $this->messageManager     = $messageManager;
         $this->storeManager       = $storeManager;
         $this->helper             = $helper;
         $this->logger             = $logger;
+        $this->config             = $config;
     }
 
     /**
@@ -98,18 +107,20 @@ class AccountManagementPlugin
     ) {
         $this->log('aroundAuthenticate()');
 
-        if ($this->helper->shouldDisallowLoginIfInactive()) {
-            try {
-                $customer = $this->customerRepository->get($username);
-            } catch (NoSuchEntityException) {
-                throw new InvalidEmailOrPasswordException(__('Invalid login or password.'));
-            }
+        if ($this->config->isModuleEnabled()) {
+            if ($this->config->shouldDisallowLoginIfInactive()) {
+                try {
+                    $customer = $this->customerRepository->get($username);
+                } catch (NoSuchEntityException) {
+                    throw new InvalidEmailOrPasswordException(__('Invalid login or password.'));
+                }
 
-            $isActive = $customer->getCustomAttribute(Data::ATTRIBUTE_CUSTOMER_IS_ACTIVE);
-            if ($isActive !== null) {
-                $isActiveValue = $isActive->getValue();
-                if ($isActiveValue == 0) {
-                    throw new UserLockedException(__('The account is locked.'));
+                $isActive = $customer->getCustomAttribute(Config::ATTRIBUTE_CUSTOMER_IS_ACTIVE);
+                if ($isActive !== null) {
+                    $isActiveValue = $isActive->getValue();
+                    if ($isActiveValue == 0) {
+                        throw new UserLockedException(__('The account is locked.'));
+                    }
                 }
             }
         }
@@ -151,22 +162,24 @@ class AccountManagementPlugin
             // InputException means handleUnknownTemplate was called before
 
             // Let's make sure this is the right template file for our needs and take over.
-            if ($this->helper->isModuleEnabled() && $template == Data::EMAIL_ACTIVATE_TEMPLATE) {
-                $this->log("aroundInitiatePasswordReset() - Caught InputException with template: [$template]: [{$e->getMessage()}].");
+            if ($this->config->isModuleEnabled()) {
+                if ($template == Config::EMAIL_ACTIVATION_TEMPLATE) {
+                    $this->log("aroundInitiatePasswordReset() - Caught InputException with template: [$template]: [{$e->getMessage()}].");
 
-                // Load customer by email
-                $customer = $this->customerRepository->get($email, $websiteId);
-                try {
-                    $this->sendAccountActivationConfirmationEmail($customer);
+                    // Load customer by email
+                    $customer = $this->customerRepository->get($email, $websiteId);
+                    try {
+                        $this->sendAccountActivationConfirmationEmail($customer);
 
-                    return true;
-                } catch (MailException $e) {
-                    $this->log("aroundInitiatePasswordReset() - MailException sending activation email: [{$e->getMessage()}].");
+                        return true;
+                    } catch (MailException $e) {
+                        $this->log("aroundInitiatePasswordReset() - MailException sending activation email: [{$e->getMessage()}].");
 
-                    return false;
-                } catch (Exception $e) {
-                    $this->log("aroundInitiatePasswordReset() - Exception sending activation email: [{$e->getMessage()}].");
-                    throw $e;
+                        return false;
+                    } catch (Exception $e) {
+                        $this->log("aroundInitiatePasswordReset() - Exception sending activation email: [{$e->getMessage()}].");
+                        throw $e;
+                    }
                 }
             }
 
@@ -227,9 +240,9 @@ class AccountManagementPlugin
     ) {
         $this->log('beforeCreateAccount()');
 
-        if ($this->helper->isModuleEnabled()) {
-            if ($this->helper->getNewAccountPasswordOverride()) {
-                if ($value = $this->helper->getNewAccountPassword()) {
+        if ($this->config->isModuleEnabled()) {
+            if ($this->config->shouldOverrideNewAccountPassword()) {
+                if ($value = $this->config->getNewAccountPassword()) {
                     $password = $value;
                 }
             }
@@ -265,26 +278,31 @@ class AccountManagementPlugin
     {
         $this->log('activateAccount()', ['email' => $email]);
 
-        // Handle any activation
-        if ($this->helper->isAccountActivationEnabled()) {
-            try {
-                // Get the customer by their email and mark them as activated
-                if ($customer = $this->getCustomerByEmail($email)) {
-                    /** @var \Magento\Framework\Api\AttributeInterface|null $isActivated */
-                    $isActivated = $customer->getCustomAttribute(Data::ATTRIBUTE_CUSTOMER_IS_ACTIVATED);
-                    if ($isActivated !== null) {
-                        if (!$isActivated->getValue()) {
-                            $customer->setCustomAttribute(Data::ATTRIBUTE_CUSTOMER_IS_ACTIVATED, 1);
-                            $this->customerRepository->save($customer);
-                            $this->log('activateAccount() - Customer saved.');
+        if (!$this->config->isModuleEnabled()) {
+            return;
+        }
 
-                            $this->messageManager->addSuccessMessage('Your account has been activated.');
-                        }
+        if (!$this->config->isAccountActivationEnabled()) {
+            return;
+        }
+
+        try {
+            // Get the customer by their email and mark them as activated
+            if ($customer = $this->getCustomerByEmail($email)) {
+                /** @var \Magento\Framework\Api\AttributeInterface|null $isActivated */
+                $isActivated = $customer->getCustomAttribute(Config::ATTRIBUTE_CUSTOMER_IS_ACTIVATED);
+                if ($isActivated !== null) {
+                    if (!$isActivated->getValue()) {
+                        $customer->setCustomAttribute(Config::ATTRIBUTE_CUSTOMER_IS_ACTIVATED, 1);
+                        $this->customerRepository->save($customer);
+                        $this->log('activateAccount() - Customer saved.');
+
+                        $this->messageManager->addSuccessMessage('Your account has been activated.');
                     }
                 }
-            } catch (Exception $e) {
-                $this->log('activateAccount()', ['exception' => $e->getMessage()]);
             }
+        } catch (Exception $e) {
+            $this->log('activateAccount()', ['exception' => $e->getMessage()]);
         }
     }
 
