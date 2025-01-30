@@ -20,6 +20,8 @@ class CustomerAccountLogin implements ArgumentInterface
 {
     private const CONFIG_PATH_ACTIVATE_ACCOUNT = 'customer/account/activateaccount';
 
+    private const CONFIG_PATH_STORE_NAME       = 'general/store_information/name';
+
     /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
      */
@@ -102,6 +104,6 @@ class CustomerAccountLogin implements ArgumentInterface
      */
     private function getStoreName()
     {
-        return $this->scopeConfig->getValue('general/store_information/name', ScopeInterface::SCOPE_STORE);
+        return $this->scopeConfig->getValue(self::CONFIG_PATH_STORE_NAME, ScopeInterface::SCOPE_STORE);
     }
 }
