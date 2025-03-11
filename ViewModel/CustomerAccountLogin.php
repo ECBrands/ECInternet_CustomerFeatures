@@ -11,43 +11,47 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Url;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
 use Magento\Store\Model\ScopeInterface;
-use ECInternet\CustomerFeatures\Helper\Data;
+use ECInternet\CustomerFeatures\Model\Config;
 
 /**
  * ViewModel for customer_account_index
  */
 class CustomerAccountLogin implements ArgumentInterface
 {
+    private const CONFIG_PATH_ACTIVATE_ACCOUNT = 'customer/account/activateaccount';
+
+    private const CONFIG_PATH_STORE_NAME       = 'general/store_information/name';
+
     /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
      */
-    private $_scopeConfig;
+    private $scopeConfig;
 
     /**
      * @var \Magento\Framework\Url
      */
-    private $_urlHelper;
+    private $urlHelper;
 
     /**
-     * @var \ECInternet\CustomerFeatures\Helper\Data
+     * @var \ECInternet\CustomerFeatures\Model\Config
      */
-    private $_helper;
+    private $config;
 
     /**
      * CustomerAccountIndex constructor.
      *
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Magento\Framework\Url                             $urlHelper
-     * @param \ECInternet\CustomerFeatures\Helper\Data           $helper
+     * @param \ECInternet\CustomerFeatures\Model\Config          $config
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         Url $urlHelper,
-        Data $helper
+        Config $config
     ) {
-        $this->_scopeConfig = $scopeConfig;
-        $this->_urlHelper   = $urlHelper;
-        $this->_helper      = $helper;
+        $this->scopeConfig = $scopeConfig;
+        $this->urlHelper   = $urlHelper;
+        $this->config      = $config;
     }
 
     /**
@@ -70,7 +74,7 @@ class CustomerAccountLogin implements ArgumentInterface
      */
     public function isAccountActivationEnabled()
     {
-        return $this->_helper->isAccountActivationEnabled();
+        return $this->config->isAccountActivationEnabled();
     }
 
     /**
@@ -90,7 +94,7 @@ class CustomerAccountLogin implements ArgumentInterface
      */
     public function getActivateAccountUrl()
     {
-        return $this->_urlHelper->getUrl(Data::CONFIG_PATH_ACTIVATE_ACCOUNT);
+        return $this->urlHelper->getUrl(self::CONFIG_PATH_ACTIVATE_ACCOUNT);
     }
 
     /**
@@ -100,6 +104,6 @@ class CustomerAccountLogin implements ArgumentInterface
      */
     private function getStoreName()
     {
-        return $this->_scopeConfig->getValue('general/store_information/name', ScopeInterface::SCOPE_STORE);
+        return $this->scopeConfig->getValue(self::CONFIG_PATH_STORE_NAME, ScopeInterface::SCOPE_STORE);
     }
 }

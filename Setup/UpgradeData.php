@@ -13,6 +13,7 @@ use Magento\Eav\Model\Entity\Attribute\SetFactory as AttributeSetFactory;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\UpgradeDataInterface;
+use ECInternet\CustomerFeatures\Model\Config;
 
 /**
  * Data upgrade script
@@ -146,7 +147,7 @@ class UpgradeData implements UpgradeDataInterface
 
             $customerSetup->addAttribute(
                 Customer::ENTITY,
-                'ecinternet_customer_activated',
+                Config::ATTRIBUTE_CUSTOMER_IS_ACTIVATED,
                 [
                     'type'         => 'int',
                     'label'        => 'Is Account Activated',
@@ -161,7 +162,7 @@ class UpgradeData implements UpgradeDataInterface
 
             /** @var \Magento\Eav\Model\Entity\Attribute\AbstractAttribute $attribute */
             $attribute = $customerSetup->getEavConfig()
-                ->getAttribute(Customer::ENTITY, 'ecinternet_customer_activated')
+                ->getAttribute(Customer::ENTITY, Config::ATTRIBUTE_CUSTOMER_IS_ACTIVATED)
                 ->addData([
                     'attribute_set_id'   => $attributeSetId,
                     'attribute_group_id' => $attributeGroupId,
@@ -179,7 +180,7 @@ class UpgradeData implements UpgradeDataInterface
 
             $customerSetup->addAttribute(
                 Customer::ENTITY,
-                'ecinternet_cust_active_sent',
+                Config::ATTRIBUTE_CUSTOMER_ACTIVATION_EMAIL_SENT,
                 [
                     'type'         => 'int',
                     'label'        => 'Automatic Account Activation Email Sent',
@@ -194,7 +195,7 @@ class UpgradeData implements UpgradeDataInterface
 
             /** @var \Magento\Eav\Model\Entity\Attribute\AbstractAttribute $attribute */
             $attribute = $customerSetup->getEavConfig()
-                ->getAttribute(Customer::ENTITY, 'ecinternet_cust_active_sent')
+                ->getAttribute(Customer::ENTITY, Config::ATTRIBUTE_CUSTOMER_ACTIVATION_EMAIL_SENT)
                 ->addData([
                     'attribute_set_id'   => $attributeSetId,
                     'attribute_group_id' => $attributeGroupId,
@@ -217,7 +218,7 @@ class UpgradeData implements UpgradeDataInterface
 
             /** @var \Magento\Eav\Model\Entity\Attribute\AbstractAttribute $attribute */
             $attribute = $customerSetup->getEavConfig()
-                ->getAttribute(Customer::ENTITY, 'ecinternet_customer_activated')
+                ->getAttribute(Customer::ENTITY, Config::ATTRIBUTE_CUSTOMER_IS_ACTIVATED)
                 ->addData([
                     'used_in_forms' => [
                         'adminhtml_customer',
@@ -230,7 +231,7 @@ class UpgradeData implements UpgradeDataInterface
 
             /** @var \Magento\Eav\Model\Entity\Attribute\AbstractAttribute $attribute */
             $attribute = $customerSetup->getEavConfig()
-                ->getAttribute(Customer::ENTITY, 'ecinternet_cust_active_sent')
+                ->getAttribute(Customer::ENTITY, Config::ATTRIBUTE_CUSTOMER_ACTIVATION_EMAIL_SENT)
                 ->addData([
                     'used_in_forms' => [
                         'adminhtml_customer',
@@ -257,7 +258,7 @@ class UpgradeData implements UpgradeDataInterface
 
             $customerSetup->addAttribute(
                 Customer::ENTITY,
-                'ecinternet_company_name',
+                Config::ATTRIBUTE_CUSTOMER_COMPANY_NAME,
                 [
                     'type'         => 'varchar',
                     'label'        => 'Company Name',
@@ -272,7 +273,7 @@ class UpgradeData implements UpgradeDataInterface
 
             /** @var \Magento\Eav\Model\Entity\Attribute\AbstractAttribute $attribute */
             $attribute = $customerSetup->getEavConfig()
-                ->getAttribute(Customer::ENTITY, 'ecinternet_company_name')
+                ->getAttribute(Customer::ENTITY, Config::ATTRIBUTE_CUSTOMER_COMPANY_NAME)
                 ->addData([
                     'attribute_set_id'   => $attributeSetId,
                     'attribute_group_id' => $attributeGroupId,

@@ -15,26 +15,27 @@ use Magento\Customer\Helper\Address as AddressHelper;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\View\Element\Template\Context;
 use ECInternet\CustomerFeatures\Logger\Logger;
+use ECInternet\CustomerFeatures\Model\Config;
 use Exception;
 
 class ECInternetCompanyName extends AbstractWidget
 {
-    const ATTRIBUTE_CODE = 'ecinternet_company_name';
-
-    /**
-     * @var \ECInternet\CustomerFeatures\Logger\Logger
-     */
-    protected $_logger;
+    private const ATTRIBUTE_CODE = Config::ATTRIBUTE_CUSTOMER_COMPANY_NAME;
 
     /**
      * @var \Magento\Customer\Api\CustomerRepositoryInterface
      */
-    private $_customerRepository;
+    private $customerRepository;
 
     /**
      * @var \Magento\Customer\Model\Session
      */
-    private $_customerSession;
+    private $customerSession;
+
+    /**
+     * @var \ECInternet\CustomerFeatures\Logger\Logger
+     */
+    private $logger;
 
     /**
      * ECInternetCompanyName constructor.
@@ -58,14 +59,11 @@ class ECInternetCompanyName extends AbstractWidget
     ) {
         parent::__construct($context, $addressHelper, $customerMetadata, $data);
 
-        $this->_customerRepository = $customerRepository;
-        $this->_customerSession    = $customerSession;
-        $this->_logger             = $logger;
+        $this->customerRepository = $customerRepository;
+        $this->customerSession    = $customerSession;
+        $this->logger             = $logger;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function _construct()
     {
         parent::_construct();
@@ -104,13 +102,13 @@ class ECInternetCompanyName extends AbstractWidget
     public function getECInternetCompanyName()
     {
         try {
-            if ($customer = $this->getCustomer()) {
+            if ($customer = $this->getCustomerById()) {
                 if ($companyName = $customer->getCustomAttribute(self::ATTRIBUTE_CODE)) {
                     return $companyName->getValue();
                 }
             }
         } catch (Exception $e) {
-            $this->log("getECInternetCompanyName() - {$e->getMessage()}");
+            $this->log('getECInternetCompanyName()', ['exception' => $e->getMessage()]);
         }
 
         return '';
@@ -123,20 +121,21 @@ class ECInternetCompanyName extends AbstractWidget
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    private function getCustomer()
+    private function getCustomerById()
     {
-        return $this->_customerRepository->getById($this->_customerSession->getCustomerId());
+        return $this->customerRepository->getById($this->customerSession->getCustomerId());
     }
 
     /**
      * Write to extension log
      *
      * @param string $message
+     * @param array  $extra
      *
      * @return void
      */
-    private function log(string $message)
+    private function log(string $message, array $extra = [])
     {
-        $this->_logger->info('Block/Widget/ECInternetCompanyName - ' . $message);
+        $this->logger->info('Block/Widget/ECInternetCompanyName - ' . $message, $extra);
     }
 }
