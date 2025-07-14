@@ -9,7 +9,7 @@ namespace ECInternet\CustomerFeatures\Plugin\Customer\Model;
 
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Model\EmailNotification;
-use ECInternet\CustomerFeatures\Helper\Data;
+use ECInternet\CustomerFeatures\Model\Config;
 
 /**
  * Plugin for Magento\Customer\Model\EmailNotification
@@ -17,19 +17,19 @@ use ECInternet\CustomerFeatures\Helper\Data;
 class EmailNotificationPlugin
 {
     /**
-     * @var \ECInternet\CustomerFeatures\Helper\Data
+     * @var \ECInternet\CustomerFeatures\Model\Config
      */
-    private $_helper;
+    private $config;
 
     /**
      * EmailNotificationPlugin constructor.
      *
-     * @param \ECInternet\CustomerFeatures\Helper\Data $helper
+     * @param \ECInternet\CustomerFeatures\Model\Config $config
      */
     public function __construct(
-        Data $helper
+        Config $config
     ) {
-        $this->_helper = $helper;
+        $this->config = $config;
     }
 
     /**
@@ -54,8 +54,10 @@ class EmailNotificationPlugin
         /* @noinspection PhpMissingParamTypeInspection */ $storeId = null,
         /* @noinspection PhpMissingParamTypeInspection */ $sendemailStoreId = null
     ): void {
-        if (!$this->_helper->isModuleEnabled() || !$this->_helper->disableCustomerWelcomeEmail()) {
-            $proceed($customer, $type, $backUrl, $storeId, $sendemailStoreId);
+        if ($this->config->isModuleEnabled() || $this->config->disableCustomerWelcomeEmail()) {
+            return;
         }
+
+        $proceed($customer, $type, $backUrl, $storeId, $sendemailStoreId);
     }
 }

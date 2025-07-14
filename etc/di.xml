@@ -15,14 +15,4 @@
 		<plugin name="ecinternet_customerfeatures-customer_model_emailnotification"
 		        type="ECInternet\CustomerFeatures\Plugin\Customer\Model\EmailNotificationPlugin" />
 	</type>
-
-	<!-- Custom Logger -->
-	<type name="ECInternet\CustomerFeatures\Logger\Logger">
-		<arguments>
-			<argument name="name" xsi:type="string">CustomerFeatures</argument>
-			<argument name="handlers" xsi:type="array">
-				<item name="system" xsi:type="object">ECInternet\CustomerFeatures\Logger\Handler</item>
-			</argument>
-		</arguments>
-	</type>
 </config>

@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 <?php
 /** @var \ECInternet\CustomerFeatures\ViewModel\CustomerAccountLogin $viewModel */
-$viewModel = $block->getViewModel();
+$viewModel = $block->getData('view_model');
 ?>
 
 <?php if ($block->getRegistration()->isAllowed()): ?>

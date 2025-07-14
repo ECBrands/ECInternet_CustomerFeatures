@@ -13,6 +13,7 @@ use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Ui\Component\Listing\Columns\Column;
+use ECInternet\CustomerFeatures\Model\Config;
 use Exception;
 
 /**
@@ -22,17 +23,15 @@ use Exception;
  */
 class ECInternetCompanyName extends Column
 {
-    const COLUMN_SOURCE_ATTRIBUTE_CODE = 'ecinternet_company_name';
-
     /**
      * @var \Magento\Customer\Api\CustomerRepositoryInterface
      */
-    private $_customerRepository;
+    private $customerRepository;
 
     /**
      * @var \Magento\Sales\Api\OrderRepositoryInterface
      */
-    private $_orderRepository;
+    private $orderRepository;
 
     /**
      * ECInternetCompanyName constructor.
@@ -52,10 +51,10 @@ class ECInternetCompanyName extends Column
         array $components = [],
         array $data = []
     ) {
-        parent::__construct($context, $uiComponentFactory, $components, $data);
+        $this->customerRepository = $customerRepository;
+        $this->orderRepository    = $orderRepository;
 
-        $this->_customerRepository = $customerRepository;
-        $this->_orderRepository    = $orderRepository;
+        parent::__construct($context, $uiComponentFactory, $components, $data);
     }
 
     /**
@@ -70,7 +69,7 @@ class ECInternetCompanyName extends Column
         if (isset($dataSource['data']['items'])) {
             foreach ($dataSource['data']['items'] as &$item) {
                 /** @var \Magento\Sales\Api\Data\OrderInterface $order */
-                $order = $this->_orderRepository->get($item['entity_id']);
+                $order = $this->orderRepository->get($item['entity_id']);
 
                 // Extract ecinternet_company_name
                 $ecinternetCompanyName = $this->getECInternetCompanyName($order);
@@ -96,7 +95,7 @@ class ECInternetCompanyName extends Column
         if ($customerId = $order->getCustomerId()) {
             /** @noinspection PhpCastIsUnnecessaryInspection */
             if ($customer = $this->getCustomer((int)$customerId)) {
-                if ($ecinternetCompanyName = $customer->getCustomAttribute(self::COLUMN_SOURCE_ATTRIBUTE_CODE)) {
+                if ($ecinternetCompanyName = $customer->getCustomAttribute(Config::ATTRIBUTE_CUSTOMER_COMPANY_NAME)) {
                     return $ecinternetCompanyName->getValue();
                 }
             }
@@ -115,7 +114,7 @@ class ECInternetCompanyName extends Column
     private function getCustomer(int $customerId)
     {
         try {
-            return $this->_customerRepository->getById($customerId);
+            return $this->customerRepository->getById($customerId);
         } catch (Exception $e) {
             error_log("getCustomer() - Unable to lookup customer by id: {$e->getMessage()}");
         }

@@ -9,7 +9,7 @@ namespace ECInternet\CustomerFeatures\ViewModel;
 
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
-use ECInternet\CustomerFeatures\Helper\Data;
+use ECInternet\CustomerFeatures\Model\Config;
 
 /**
  * ViewModel for customer_account_index
@@ -19,25 +19,25 @@ class CustomerAccountIndex implements ArgumentInterface
     /**
      * @var \Magento\Customer\Model\Session
      */
-    private $_customerSession;
+    private $customerSession;
 
     /**
-     * @var \ECInternet\CustomerFeatures\Helper\Data
+     * @var \ECInternet\CustomerFeatures\Model\Config
      */
-    private $_helper;
+    private $config;
 
     /**
      * CustomerAccountIndex constructor.
      *
-     * @param \Magento\Customer\Model\Session          $customerSession
-     * @param \ECInternet\CustomerFeatures\Helper\Data $helper
+     * @param \Magento\Customer\Model\Session           $customerSession
+     * @param \ECInternet\CustomerFeatures\Model\Config $config
      */
     public function __construct(
         CustomerSession $customerSession,
-        Data $helper
+        Config $config
     ) {
-        $this->_customerSession = $customerSession;
-        $this->_helper          = $helper;
+        $this->customerSession = $customerSession;
+        $this->config          = $config;
     }
 
     /**
@@ -47,7 +47,7 @@ class CustomerAccountIndex implements ArgumentInterface
      */
     public function shouldShowAdditionalInformation()
     {
-        return $this->_helper->shouldShowAdditionalInformation();
+        return $this->config->shouldShowAdditionalInformation();
     }
 
     /**
@@ -57,11 +57,8 @@ class CustomerAccountIndex implements ArgumentInterface
      */
     public function getCurrentCustomerNumber()
     {
-        if ($this->_customerSession->isLoggedIn()) {
-            /** @var \Magento\Customer\Model\Customer $customer */
-            if ($customer = $this->_customerSession->getCustomer()) {
-                return $customer->getData('customer_number');
-            }
+        if ($this->customerSession->isLoggedIn()) {
+            return $this->customerSession->getCustomer()->getData('customer_number');
         }
 
         return '';
@@ -74,11 +71,8 @@ class CustomerAccountIndex implements ArgumentInterface
      */
     public function getCurrentCustomerCompanyName()
     {
-        if ($this->_customerSession->isLoggedIn()) {
-            /** @var \Magento\Customer\Model\Customer $customer */
-            if ($customer = $this->_customerSession->getCustomer()) {
-                return $customer->getData('ecinternet_company_name');
-            }
+        if ($this->customerSession->isLoggedIn()) {
+            return $this->customerSession->getCustomer()->getData('ecinternet_company_name');
         }
 
         return '';

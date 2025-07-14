@@ -14,27 +14,21 @@ use Magento\Customer\Block\Widget\AbstractWidget;
 use Magento\Customer\Helper\Address as AddressHelper;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\View\Element\Template\Context;
-use ECInternet\CustomerFeatures\Logger\Logger;
 use Exception;
 
 class ECInternetCompanyName extends AbstractWidget
 {
-    const ATTRIBUTE_CODE = 'ecinternet_company_name';
-
-    /**
-     * @var \ECInternet\CustomerFeatures\Logger\Logger
-     */
-    protected $_logger;
+    private const ATTRIBUTE_CODE = 'ecinternet_company_name';
 
     /**
      * @var \Magento\Customer\Api\CustomerRepositoryInterface
      */
-    private $_customerRepository;
+    private $customerRepository;
 
     /**
      * @var \Magento\Customer\Model\Session
      */
-    private $_customerSession;
+    private $customerSession;
 
     /**
      * ECInternetCompanyName constructor.
@@ -44,7 +38,6 @@ class ECInternetCompanyName extends AbstractWidget
      * @param \Magento\Customer\Api\CustomerMetadataInterface   $customerMetadata
      * @param \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository
      * @param \Magento\Customer\Model\Session                   $customerSession
-     * @param \ECInternet\CustomerFeatures\Logger\Logger        $logger
      * @param array                                             $data
      */
     public function __construct(
@@ -53,14 +46,12 @@ class ECInternetCompanyName extends AbstractWidget
         CustomerMetadataInterface $customerMetadata,
         CustomerRepositoryInterface $customerRepository,
         CustomerSession $customerSession,
-        Logger $logger,
         array $data = []
     ) {
-        parent::__construct($context, $addressHelper, $customerMetadata, $data);
+        $this->customerRepository = $customerRepository;
+        $this->customerSession    = $customerSession;
 
-        $this->_customerRepository = $customerRepository;
-        $this->_customerSession    = $customerSession;
-        $this->_logger             = $logger;
+        parent::__construct($context, $addressHelper, $customerMetadata, $data);
     }
 
     /**
@@ -104,13 +95,12 @@ class ECInternetCompanyName extends AbstractWidget
     public function getECInternetCompanyName()
     {
         try {
-            if ($customer = $this->getCustomer()) {
-                if ($companyName = $customer->getCustomAttribute(self::ATTRIBUTE_CODE)) {
-                    return $companyName->getValue();
-                }
+            $customer = $this->getCustomer();
+            if ($companyName = $customer->getCustomAttribute(self::ATTRIBUTE_CODE)) {
+                return $companyName->getValue();
             }
         } catch (Exception $e) {
-            $this->log("getECInternetCompanyName() - {$e->getMessage()}");
+            $this->log('getECInternetCompanyName()', ['exception' => $e->getMessage()]);
         }
 
         return '';
@@ -125,18 +115,17 @@ class ECInternetCompanyName extends AbstractWidget
      */
     private function getCustomer()
     {
-        return $this->_customerRepository->getById($this->_customerSession->getCustomerId());
+        return $this->customerRepository->getById($this->customerSession->getCustomerId());
     }
 
     /**
-     * Write to extension log
+     * Write to extension log.
      *
      * @param string $message
-     *
-     * @return void
+     * @param array  $extra
      */
-    private function log(string $message)
+    private function log(string $message, array $extra = [])
     {
-        $this->_logger->info('Block/Widget/ECInternetCompanyName - ' . $message);
+        $this->_logger->info('Block/Widget/ECInternetCompanyName - ' . $message, $extra);
     }
 }

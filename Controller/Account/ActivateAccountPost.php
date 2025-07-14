@@ -17,8 +17,8 @@ use Magento\Framework\Exception\SecurityViolationException;
 use Magento\Framework\Validator\EmailAddress;
 use Magento\Framework\Validator\ValidatorChain;
 use ECInternet\CustomerFeatures\Helper\Data;
-use ECInternet\CustomerFeatures\Logger\Logger;
 use Exception;
+use Psr\Log\LoggerInterface;
 
 /**
  * ActivateAccountPost Account controller
@@ -28,7 +28,7 @@ use Exception;
 class ActivateAccountPost extends ForgotPasswordPost
 {
     /**
-     * @var \ECInternet\CustomerFeatures\Logger\Logger
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 
@@ -39,14 +39,14 @@ class ActivateAccountPost extends ForgotPasswordPost
      * @param \Magento\Customer\Model\Session                  $customerSession
      * @param \Magento\Customer\Api\AccountManagementInterface $customerAccountManagement
      * @param \Magento\Framework\Escaper                       $escaper
-     * @param \ECInternet\CustomerFeatures\Logger\Logger       $logger
+     * @param \Psr\Log\LoggerInterface                         $logger
      */
     public function __construct(
         Context $context,
         Session $customerSession,
         AccountManagementInterface $customerAccountManagement,
         Escaper $escaper,
-        Logger $logger
+        LoggerInterface $logger
     ) {
         parent::__construct($context, $customerSession, $customerAccountManagement, $escaper);
 
@@ -100,7 +100,6 @@ class ActivateAccountPost extends ForgotPasswordPost
             return $resultRedirect->setPath('*/*/');
         } else {
             $this->messageManager->addErrorMessage(__('Please enter your email.'));
-
             return $resultRedirect->setPath('*/*/activateaccount');
         }
     }

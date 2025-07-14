@@ -24,12 +24,12 @@ class UpgradeData implements UpgradeDataInterface
     /**
      * @var \Magento\Customer\Setup\CustomerSetupFactory
      */
-    private $_customerSetupFactory;
+    private $customerSetupFactory;
 
     /**
      * @var \Magento\Eav\Model\Entity\Attribute\SetFactory
      */
-    private $_attributeSetFactory;
+    private $attributeSetFactory;
 
     /**
      * UpgradeData constructor.
@@ -41,8 +41,8 @@ class UpgradeData implements UpgradeDataInterface
         CustomerSetupFactory $customerSetupFactory,
         AttributeSetFactory $attributeSetFactory
     ) {
-        $this->_customerSetupFactory = $customerSetupFactory;
-        $this->_attributeSetFactory  = $attributeSetFactory;
+        $this->customerSetupFactory = $customerSetupFactory;
+        $this->attributeSetFactory  = $attributeSetFactory;
     }
 
     /**
@@ -64,14 +64,14 @@ class UpgradeData implements UpgradeDataInterface
 
         if (version_compare($context->getVersion(), '1.0.1', '<')) {
             /** @var \Magento\Customer\Setup\CustomerSetup $customerSetup */
-            $customerSetup = $this->_customerSetupFactory->create(['setup' => $setup]);
+            $customerSetup = $this->customerSetupFactory->create(['setup' => $setup]);
 
             /** @var \Magento\Eav\Model\Entity\Type $customerEntity */
             $customerEntity = $customerSetup->getEavConfig()->getEntityType(Customer::ENTITY);
             $attributeSetId = $customerEntity->getDefaultAttributeSetId();
 
             /** @var \Magento\Eav\Model\Entity\Attribute\Set $attributeSet */
-            $attributeSet     = $this->_attributeSetFactory->create();
+            $attributeSet     = $this->attributeSetFactory->create();
             $attributeGroupId = $attributeSet->getDefaultGroupId($attributeSetId);
 
             /** @var \Magento\Eav\Model\Entity\Attribute\AbstractAttribute $attribute */
@@ -88,14 +88,14 @@ class UpgradeData implements UpgradeDataInterface
 
         if (version_compare($context->getVersion(), '1.1.3', '<')) {
             /** @var \Magento\Customer\Setup\CustomerSetup $customerSetup */
-            $customerSetup = $this->_customerSetupFactory->create(['setup' => $setup]);
+            $customerSetup = $this->customerSetupFactory->create(['setup' => $setup]);
 
             /** @var \Magento\Eav\Model\Entity\Type $customerEntity */
             $customerEntity = $customerSetup->getEavConfig()->getEntityType(Customer::ENTITY);
             $attributeSetId = $customerEntity->getDefaultAttributeSetId();
 
             /** @var \Magento\Eav\Model\Entity\Attribute\Set $attributeSet */
-            $attributeSet     = $this->_attributeSetFactory->create();
+            $attributeSet     = $this->attributeSetFactory->create();
             $attributeGroupId = $attributeSet->getDefaultGroupId($attributeSetId);
 
             $customerSetup->addAttribute(
@@ -134,14 +134,14 @@ class UpgradeData implements UpgradeDataInterface
 
         if (version_compare($context->getVersion(), '1.3.0', '<')) {
             /** @var \Magento\Customer\Setup\CustomerSetup $customerSetup */
-            $customerSetup = $this->_customerSetupFactory->create(['setup' => $setup]);
+            $customerSetup = $this->customerSetupFactory->create(['setup' => $setup]);
 
             /** @var \Magento\Eav\Model\Entity\Type $customerEntity */
             $customerEntity = $customerSetup->getEavConfig()->getEntityType(Customer::ENTITY);
             $attributeSetId = $customerEntity->getDefaultAttributeSetId();
 
             /** @var \Magento\Eav\Model\Entity\Attribute\Set $attributeSet */
-            $attributeSet     = $this->_attributeSetFactory->create();
+            $attributeSet     = $this->attributeSetFactory->create();
             $attributeGroupId = $attributeSet->getDefaultGroupId($attributeSetId);
 
             $customerSetup->addAttribute(
@@ -213,7 +213,7 @@ class UpgradeData implements UpgradeDataInterface
 
         if (version_compare($context->getVersion(), '1.3.4', '<')) {
             /** @var \Magento\Customer\Setup\CustomerSetup $customerSetup */
-            $customerSetup = $this->_customerSetupFactory->create(['setup' => $setup]);
+            $customerSetup = $this->customerSetupFactory->create(['setup' => $setup]);
 
             /** @var \Magento\Eav\Model\Entity\Attribute\AbstractAttribute $attribute */
             $attribute = $customerSetup->getEavConfig()
@@ -245,14 +245,14 @@ class UpgradeData implements UpgradeDataInterface
         // 1.3.7 - Add 'ecinternet_company_name'
         if (version_compare($context->getVersion(), '1.3.7', '<')) {
             /** @var \Magento\Customer\Setup\CustomerSetup $customerSetup */
-            $customerSetup = $this->_customerSetupFactory->create(['setup' => $setup]);
+            $customerSetup = $this->customerSetupFactory->create(['setup' => $setup]);
 
             /** @var \Magento\Eav\Model\Entity\Type $customerEntity */
             $customerEntity = $customerSetup->getEavConfig()->getEntityType(Customer::ENTITY);
             $attributeSetId = $customerEntity->getDefaultAttributeSetId();
 
             /** @var \Magento\Eav\Model\Entity\Attribute\Set $attributeSet */
-            $attributeSet     = $this->_attributeSetFactory->create();
+            $attributeSet     = $this->attributeSetFactory->create();
             $attributeGroupId = $attributeSet->getDefaultGroupId($attributeSetId);
 
             $customerSetup->addAttribute(
@@ -292,7 +292,7 @@ class UpgradeData implements UpgradeDataInterface
         // 1.3.8 - Remove 'company_name'
         if (version_compare($context->getVersion(), '1.3.8', '<')) {
             /** @var \Magento\Customer\Setup\CustomerSetup $customerSetup */
-            $customerSetup = $this->_customerSetupFactory->create(['setup' => $setup]);
+            $customerSetup = $this->customerSetupFactory->create(['setup' => $setup]);
 
             $customerSetup->removeAttribute(Customer::ENTITY, 'company_name');
         }

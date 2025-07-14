@@ -11,8 +11,9 @@ use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CustomerCollectionFactory;
 use ECInternet\CustomerFeatures\Helper\Data;
-use ECInternet\CustomerFeatures\Logger\Logger;
+use ECInternet\CustomerFeatures\Model\Config;
 use Exception;
+use Psr\Log\LoggerInterface;
 
 /**
  * AccountActivationEmail Cron
@@ -22,25 +23,32 @@ use Exception;
  */
 class AccountActivationEmail
 {
+    private const ACCOUNT_ACTIVATION_CRON_DEFAULT_MAXIMUM_EMAIL_COUNT = 10;
+
     /**
      * @var \Magento\Customer\Api\CustomerRepositoryInterface
      */
-    private $_customerRepository;
+    private $customerRepository;
 
     /**
      * @var \Magento\Customer\Model\ResourceModel\Customer\CollectionFactory
      */
-    private $_customerCollectionFactory;
+    private $customerCollectionFactory;
 
     /**
      * @var \ECInternet\CustomerFeatures\Helper\Data
      */
-    private $_helper;
+    private $helper;
 
     /**
-     * @var \ECInternet\CustomerFeatures\Logger\Logger
+     * @var \ECInternet\CustomerFeatures\Model\Config
      */
-    private $_logger;
+    private $config;
+
+    /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    private $logger;
 
     /**
      * AccountActivationEmail constructor.
@@ -48,18 +56,21 @@ class AccountActivationEmail
      * @param \Magento\Customer\Api\CustomerRepositoryInterface                $customerRepository
      * @param \Magento\Customer\Model\ResourceModel\Customer\CollectionFactory $customerCollectionFactory
      * @param \ECInternet\CustomerFeatures\Helper\Data                         $helper
-     * @param \ECInternet\CustomerFeatures\Logger\Logger                       $logger
+     * @param \ECInternet\CustomerFeatures\Model\Config                        $config
+     * @param \Psr\Log\LoggerInterface                                         $logger
      */
     public function __construct(
         CustomerRepositoryInterface $customerRepository,
         CustomerCollectionFactory $customerCollectionFactory,
         Data $helper,
-        Logger $logger
+        Config $config,
+        LoggerInterface $logger
     ) {
-        $this->_customerRepository        = $customerRepository;
-        $this->_customerCollectionFactory = $customerCollectionFactory;
-        $this->_helper                    = $helper;
-        $this->_logger                    = $logger;
+        $this->customerRepository        = $customerRepository;
+        $this->customerCollectionFactory = $customerCollectionFactory;
+        $this->helper                    = $helper;
+        $this->config                    = $config;
+        $this->logger                    = $logger;
     }
 
     /**
@@ -72,13 +83,13 @@ class AccountActivationEmail
     {
         $this->log('execute()');
 
-        if (!$this->_helper->isAccountActivationCronEnabled()) {
+        if (!$this->config->isAccountActivationCronEnabled()) {
             $this->log('execute() - Account Activate cron disabled.');
 
             return $this;
         }
 
-        $maxEmailCount = $this->_helper->getAccountActivationCronMaxEmails();
+        $maxEmailCount = $this->getMaxEmailCount();
         $this->log('execute()', ['maxEmailsPerCronRun' => $maxEmailCount]);
 
         // Load unactivated customers.
@@ -96,13 +107,30 @@ class AccountActivationEmail
                 $this->markCustomerActivationEmailSent($customerData);
 
                 $this->log("AccountActivationEmail() - Sending cron email to customer [$customerEmail]...");
-                $this->_helper->sendAccountActivationNoticeEmail($customerData);
+                $this->helper->sendAccountActivationNoticeEmail($customerData);
             } catch (Exception $e) {
                 $this->log('AccountActivationEmail()', ['exception' => $e->getMessage()]);
             }
         }
 
         return $this;
+    }
+
+    /**
+     * @return int
+     */
+    private function getMaxEmailCount()
+    {
+        // Start with setting value
+        $maxEmails = $this->config->getAccountActivationCronMaxEmails();
+
+        // Confirm it's numeric
+        if (is_numeric($maxEmails)) {
+            return (int)$maxEmails;
+        }
+
+        // Safe Default of 10
+        return self::ACCOUNT_ACTIVATION_CRON_DEFAULT_MAXIMUM_EMAIL_COUNT;
     }
 
     /**
@@ -115,10 +143,10 @@ class AccountActivationEmail
      */
     private function getCronJobCustomers(int $limit)
     {
-        return $this->_customerCollectionFactory->create()
+        return $this->customerCollectionFactory->create()
             ->addAttributeToSelect('*')
-            ->addAttributeToFilter(Data::ATTRIBUTE_CUSTOMER_IS_ACTIVATED, ['eq' => '0'])
-            ->addAttributeToFilter(Data::ATTRIBUTE_CUSTOMER_ACTIVATION_EMAIL_SENT, ['eq' => '0'])
+            ->addAttributeToFilter(Config::ATTRIBUTE_CUSTOMER_IS_ACTIVATED, ['eq' => '0'])
+            ->addAttributeToFilter(Config::ATTRIBUTE_CUSTOMER_ACTIVATION_EMAIL_SENT, ['eq' => '0'])
             ->setPageSize($limit)
             ->setCurPage(1)
             ->load();
@@ -138,8 +166,8 @@ class AccountActivationEmail
     ) {
         $this->log('markCustomerActivationEmailSent()', ['customerId' => $customer->getId()]);
 
-        $customer->setCustomAttribute(Data::ATTRIBUTE_CUSTOMER_ACTIVATION_EMAIL_SENT, 1);
-        $this->_customerRepository->save($customer);
+        $customer->setCustomAttribute(Config::ATTRIBUTE_CUSTOMER_ACTIVATION_EMAIL_SENT, 1);
+        $this->customerRepository->save($customer);
     }
 
     /**
@@ -152,6 +180,6 @@ class AccountActivationEmail
      */
     private function log(string $message, array $extra = [])
     {
-        $this->_logger->info('Cron/AccountActivationEmail - ' . $message, $extra);
+        $this->logger->info('Cron/AccountActivationEmail - ' . $message, $extra);
     }
 }

@@ -25,12 +25,12 @@ class InstallData implements InstallDataInterface
     /**
      * @var \Magento\Eav\Model\Config
      */
-    private $_eavConfig;
+    private $eavConfig;
 
     /**
      * @var \Magento\Eav\Setup\EavSetupFactory
      */
-    private $_eavSetupFactory;
+    private $eavSetupFactory;
 
     /**
      * InstallData constructor.
@@ -42,8 +42,8 @@ class InstallData implements InstallDataInterface
         Config $eavConfig,
         EavSetupFactory $eavSetupFactory
     ) {
-        $this->_eavConfig       = $eavConfig;
-        $this->_eavSetupFactory = $eavSetupFactory;
+        $this->eavConfig       = $eavConfig;
+        $this->eavSetupFactory = $eavSetupFactory;
     }
 
     /**
@@ -61,7 +61,7 @@ class InstallData implements InstallDataInterface
         ModuleContextInterface $context
     ) {
         /** @var \Magento\Eav\Setup\EavSetup $eavSetup */
-        $eavSetup = $this->_eavSetupFactory->create(['setup' => $setup]);
+        $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             Customer::ENTITY,
             'ecinternet_is_active',
@@ -80,7 +80,7 @@ class InstallData implements InstallDataInterface
         );
 
         /** @var \Magento\Eav\Model\Entity\Attribute\AbstractAttribute $customerActiveAttribute */
-        $customerActiveAttribute = $this->_eavConfig->getAttribute(
+        $customerActiveAttribute = $this->eavConfig->getAttribute(
             Customer::ENTITY,
             'ecinternet_is_active'
         );
@@ -110,7 +110,7 @@ class InstallData implements InstallDataInterface
         );
 
         /** @var \Magento\Eav\Model\Entity\Attribute\AbstractAttribute $customerAddressContactNameAttribute */
-        $customerAddressContactNameAttribute = $this->_eavConfig->getAttribute(
+        $customerAddressContactNameAttribute = $this->eavConfig->getAttribute(
             'customer_address',
             'contact_name'
         );
