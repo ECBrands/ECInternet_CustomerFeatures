@@ -10,6 +10,7 @@ namespace ECInternet\CustomerFeatures\Helper;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Api\GroupRepositoryInterface;
 use Magento\Customer\Helper\View as CustomerViewHelper;
+use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\CustomerRegistry;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\App\Helper\AbstractHelper;
@@ -29,8 +30,6 @@ use Exception;
  */
 class Data extends AbstractHelper
 {
-    private const CONFIG_PATH_FORGOT_EMAIL_IDENTITY = 'customer/password/forgot_email_identity';
-
     /**
      * @var \Magento\Customer\Api\GroupRepositoryInterface
      */
@@ -72,11 +71,6 @@ class Data extends AbstractHelper
     private $storeManager;
 
     /**
-     * @var \ECInternet\CustomerFeatures\Model\Config
-     */
-    private $config;
-
-    /**
      * Data constructor.
      *
      * @param \Magento\Framework\App\Helper\Context                         $context
@@ -108,62 +102,14 @@ class Data extends AbstractHelper
         $this->customerViewHelper = $customerViewHelper;
         $this->customerRegistry   = $customerRegistry;
         $this->customerSession    = $customerSession;
-        $this->transportBuilder  = $transportBuilder;
-        $this->dataProcessor     = $dataProcessor;
-        $this->storeManager      = $storeManager;
-        $this->config             = $config;
+        $this->transportBuilder   = $transportBuilder;
+        $this->dataProcessor      = $dataProcessor;
+        $this->storeManager       = $storeManager;
         $this->senderResolver     = $senderResolver ?: ObjectManager::getInstance()->get(SenderResolverInterface::class); //FIXME: Done this way by core Magento 2 in Magento\Customer\Model\EmailNotification -- We should fix this our own way.
     }
 
     /**
-     * Can the current Customer add addresses?
-     *
-     * @return bool
-     */
-    public function canCurrentCustomerAddAddresses()
-    {
-        if (!$this->config->isModuleEnabled()) {
-            return true;
-        }
-
-        if (!$this->config->shouldLimitAddAddress()) {
-            return true;
-        }
-
-        if ($allowedCustomerGroups = explode(',', $this->config->getLimitAddAddressGroups())) {
-            if ($customerGroup = $this->getCustomerGroupCodeForLoggedInCustomer()) {
-                return in_array($customerGroup, $allowedCustomerGroups);
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Can the current Customer edit addresses?
-     *
-     * @return bool
-     */
-    public function canCurrentCustomerEditAddresses()
-    {
-        if (!$this->config->isModuleEnabled()) {
-            return true;
-        }
-        if (!$this->config->shouldLimitEditAddress()) {
-            return true;
-        }
-
-        if ($allowedCustomerGroups = explode(',', $this->config->getLimitEditAddressGroups())) {
-            if ($customerGroup = $this->getCustomerGroupCodeForLoggedInCustomer()) {
-                return in_array($customerGroup, $allowedCustomerGroups);
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Send email to Customer
+     * Send email to Customer from 'customer/password/forgot_email_identity' template
      *
      * @param \Magento\Customer\Api\Data\CustomerInterface $customer
      * @param string                                       $template
@@ -188,7 +134,7 @@ class Data extends AbstractHelper
             $this->sendEmailTemplate(
                 $customer,
                 $template,
-                self::CONFIG_PATH_FORGOT_EMAIL_IDENTITY,
+                Customer::XML_PATH_FORGOT_EMAIL_IDENTITY,
                 ['customer' => $customerEmailData, 'store' => $this->storeManager->getStore($storeId)],
                 (int)$storeId
             );
