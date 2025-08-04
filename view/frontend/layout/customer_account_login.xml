@@ -8,6 +8,7 @@
       layout="1column"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
 	<body>
+		<!-- Override the 'customer.new' template, and add a view model for activation -->
 		<referenceBlock name="customer.new" template="ECInternet_CustomerFeatures::newcustomer.phtml">
 			<arguments>
 				<argument name="view_model" xsi:type="object">ECInternet\CustomerFeatures\ViewModel\CustomerAccountLogin</argument>
