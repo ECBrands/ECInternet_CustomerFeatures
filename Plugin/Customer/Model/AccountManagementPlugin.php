@@ -105,7 +105,7 @@ class AccountManagementPlugin
         /* @noinspection PhpMissingParamTypeInspection */ $username,
         /* @noinspection PhpMissingParamTypeInspection */ $password
     ) {
-        $this->log('aroundAuthenticate()');
+        $this->log('aroundAuthenticate()', ['username' => $username]);
 
         if ($this->config->isModuleEnabled()) {
             if ($this->config->shouldDisallowLoginIfInactive()) {
@@ -131,6 +131,8 @@ class AccountManagementPlugin
 
     /**
      * Add error handling for failed password reset emails
+     *
+     * TODO: Why are we wrapping initiatePasswordReset()? Does activate email get sent using same method?
      *
      * @param \Magento\Customer\Model\AccountManagement $subject
      * @param callable                                  $proceed
@@ -188,7 +190,7 @@ class AccountManagementPlugin
     }
 
     /**
-     * Updates 'ecinternet_customer_activated' on the Customer
+     * Attempts to active Customer
      *
      * @param \Magento\Customer\Model\AccountManagement $subject
      * @param callable                                  $proceed
