@@ -76,6 +76,7 @@ class ActivateAccountPost extends ForgotPasswordPost
             }
 
             try {
+                //TODO: Why are we using initiatePasswordReset here?
                 $this->customerAccountManagement->initiatePasswordReset($email, Config::EMAIL_ACTIVATION_TEMPLATE);
             } catch (NoSuchEntityException $exception) {
                 // Do nothing, we don't want anyone to use this action to determine which email accounts are registered.

@@ -173,6 +173,17 @@ class Data extends AbstractHelper
             $storeId
         );
 
+        $this->log('sendEmailTemplate()', [
+            'template'   => $template,
+            'sender'     => $sender,
+            'from'       => $from,
+            'templateId' => $templateId,
+            'storeId'    => $storeId,
+            'email'      => $customerEmail,
+            'name'       => $customerName,
+            'params'     => $templateParams
+        ]);
+
         $transport = $this->transportBuilder->setTemplateIdentifier($templateId)
             ->setTemplateOptions(['area' => 'frontend', 'store' => $storeId])
             ->setTemplateVars($templateParams)
