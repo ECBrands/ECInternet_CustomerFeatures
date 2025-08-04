@@ -170,6 +170,11 @@ class AccountManagementPlugin
 
                     // Load customer by email
                     $customer = $this->customerRepository->get($email, $websiteId);
+                    if (!$customer) {
+                        $this->log("aroundInitiatePasswordReset() - No customer found for email: [$email].");
+                        throw new NoSuchEntityException(__('No customer found with the provided email address.'));
+                    }
+
                     try {
                         $this->sendAccountActivationConfirmationEmail($customer);
 
