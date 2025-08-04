@@ -8,11 +8,9 @@ declare(strict_types=1);
 namespace ECInternet\CustomerFeatures\Helper;
 
 use Magento\Customer\Api\Data\CustomerInterface;
-use Magento\Customer\Api\GroupRepositoryInterface;
 use Magento\Customer\Helper\View as CustomerViewHelper;
 use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\CustomerRegistry;
-use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\App\ObjectManager;
@@ -20,8 +18,6 @@ use Magento\Framework\Mail\Template\SenderResolverInterface;
 use Magento\Framework\Mail\Template\TransportBuilder;
 use Magento\Framework\Reflection\DataObjectProcessor;
 use Magento\Store\Model\StoreManagerInterface;
-use ECInternet\CustomerFeatures\Model\Config;
-use Exception;
 
 /**
  * Helper
@@ -31,11 +27,6 @@ use Exception;
 class Data extends AbstractHelper
 {
     /**
-     * @var \Magento\Customer\Api\GroupRepositoryInterface
-     */
-    private $groupRepository;
-
-    /**
      * @var \Magento\Customer\Helper\View
      */
     private $customerViewHelper;
@@ -44,11 +35,6 @@ class Data extends AbstractHelper
      * @var \Magento\Customer\Model\CustomerRegistry
      */
     private $customerRegistry;
-
-    /**
-     * @var \Magento\Customer\Model\Session
-     */
-    private $customerSession;
 
     /**
      * @var \Magento\Framework\Mail\Template\SenderResolverInterface
@@ -74,34 +60,26 @@ class Data extends AbstractHelper
      * Data constructor.
      *
      * @param \Magento\Framework\App\Helper\Context                         $context
-     * @param \Magento\Customer\Api\GroupRepositoryInterface                $groupRepository
      * @param \Magento\Customer\Helper\View                                 $customerViewHelper
      * @param \Magento\Customer\Model\CustomerRegistry                      $customerRegistry
-     * @param \Magento\Customer\Model\Session                               $customerSession
      * @param \Magento\Framework\Mail\Template\TransportBuilder             $transportBuilder
      * @param \Magento\Framework\Reflection\DataObjectProcessor             $dataProcessor
      * @param \Magento\Store\Model\StoreManagerInterface                    $storeManager
-     * @param \ECInternet\CustomerFeatures\Model\Config                     $config
      * @param \Magento\Framework\Mail\Template\SenderResolverInterface|null $senderResolver
      */
     public function __construct(
         Context $context,
-        GroupRepositoryInterface $groupRepository,
         CustomerViewHelper $customerViewHelper,
         CustomerRegistry $customerRegistry,
-        CustomerSession $customerSession,
         TransportBuilder $transportBuilder,
         DataObjectProcessor $dataProcessor,
         StoreManagerInterface $storeManager,
-        Config $config,
         SenderResolverInterface $senderResolver = null
     ) {
         parent::__construct($context);
 
-        $this->groupRepository    = $groupRepository;
         $this->customerViewHelper = $customerViewHelper;
         $this->customerRegistry   = $customerRegistry;
-        $this->customerSession    = $customerSession;
         $this->transportBuilder   = $transportBuilder;
         $this->dataProcessor      = $dataProcessor;
         $this->storeManager       = $storeManager;
@@ -183,13 +161,11 @@ class Data extends AbstractHelper
         string $template,
         string $sender,
         array $templateParams = [],
-        int $storeId = null,
-        string $email = null
+        int $storeId = null
     ) {
-        $templateId = $this->scopeConfig->getValue($template, 'store', $storeId);
-        if ($email === null) {
-            $email = $customer->getEmail();
-        }
+        $templateId    = $this->scopeConfig->getValue($template, 'store', $storeId);
+        $customerEmail = $customer->getEmail();
+        $customerName  = $this->customerViewHelper->getCustomerName($customer);
 
         /** @var array $from */
         $from = $this->senderResolver->resolve(
@@ -201,44 +177,10 @@ class Data extends AbstractHelper
             ->setTemplateOptions(['area' => 'frontend', 'store' => $storeId])
             ->setTemplateVars($templateParams)
             ->setFromByScope($from)
-            ->addTo($email, $this->customerViewHelper->getCustomerName($customer))
+            ->addTo($customerEmail, $customerName)
             ->getTransport();
 
         $transport->sendMessage();
-    }
-
-    /**
-     * Get the CustomerGroup code for the currently logged-in Customer
-     *
-     * @return string|null
-     */
-    private function getCustomerGroupCodeForLoggedInCustomer()
-    {
-        if ($this->customerSession->isLoggedIn()) {
-            /** @var \Magento\Customer\Model\Customer $customer */
-            if ($customer = $this->customerSession->getCustomer()) {
-                /** @var \Magento\Customer\Api\Data\GroupInterface $group */
-                if ($group = $this->getCustomerGroupById($customer->getGroupId())) {
-                    return $group->getCode();
-                }
-            }
-        }
-
-        return null;
-    }
-
-    private function getCustomerGroupById($customerGroupId)
-    {
-        try {
-            return $this->groupRepository->getById($customerGroupId);
-        } catch (Exception $e) {
-            $this->log('getCustomerGroupById()', [
-                'customerGroupId' => $customerGroupId,
-                'exception'       => $e->getMessage()
-            ]);
-        }
-
-        return null;
     }
 
     /**
