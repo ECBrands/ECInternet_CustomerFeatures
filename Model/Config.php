@@ -15,8 +15,6 @@ class Config
 
     private const CONFIG_PATH_DISALLOW_LOGIN_IF_INACTIVE    = 'customer_features/general/disallow_login_if_inactive';
 
-    private const CONFIG_PATH_SHOW_ADDITIONAL_INFO          = 'customer_features/general/show_additional_info';
-
     private const CONFIG_PATH_DISABLE_REGISTRATION          = 'customer_features/new_account/disable_customer_registration';
 
     private const CONFIG_PATH_DISABLE_WELCOME_EMAIL         = 'customer_features/new_account/disable_customer_welcome_email';
@@ -83,16 +81,6 @@ class Config
     public function shouldDisallowLoginIfInactive()
     {
         return $this->scopeConfig->isSetFlag(self::CONFIG_PATH_DISALLOW_LOGIN_IF_INACTIVE);
-    }
-
-    /**
-     * Should we should additional information in Customer title?
-     *
-     * @return bool
-     */
-    public function shouldShowAdditionalInformation()
-    {
-        return $this->scopeConfig->isSetFlag(self::CONFIG_PATH_SHOW_ADDITIONAL_INFO);
     }
 
     /**
