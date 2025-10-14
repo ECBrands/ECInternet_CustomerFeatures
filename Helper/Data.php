@@ -150,7 +150,6 @@ class Data extends AbstractHelper
      * @param string                                       $sender         configuration path of email identity
      * @param array                                        $templateParams
      * @param int|null                                     $storeId
-     * @param string|null                                  $email
      *
      * @return void
      * @throws \Magento\Framework\Exception\LocalizedException
