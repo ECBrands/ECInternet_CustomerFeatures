@@ -64,15 +64,15 @@ class Data extends AbstractHelper
     /**
      * Data constructor.
      *
-     * @param \Magento\Framework\App\Helper\Context                         $context
-     * @param \Magento\Customer\Helper\View                                 $customerViewHelper
-     * @param \Magento\Customer\Model\CustomerRegistry                      $customerRegistry
-     * @param \Magento\Framework\Mail\Template\TransportBuilder             $transportBuilder
-     * @param \Magento\Framework\Reflection\DataObjectProcessor             $dataProcessor
-     * @param \Magento\Store\Model\StoreManagerInterface                    $storeManager
-     * @param \ECInternet\CustomerFeatures\Logger\Logger                    $logger
-     * @param \Magento\Framework\Mail\Template\SenderResolverInterface      $senderResolver
-     */
+     * @param \Magento\Framework\App\Helper\Context                    $context
+     * @param \Magento\Customer\Helper\View                            $customerViewHelper
+     * @param \Magento\Customer\Model\CustomerRegistry                 $customerRegistry
+     * @param \Magento\Framework\Mail\Template\SenderResolverInterface $senderResolver
+     * @param \Magento\Framework\Mail\Template\TransportBuilder        $transportBuilder
+     * @param \Magento\Framework\Reflection\DataObjectProcessor        $dataProcessor
+     * @param \Magento\Store\Model\StoreManagerInterface               $storeManager
+     * @param \ECInternet\CustomerFeatures\Logger\Logger               $logger
+ */
     public function __construct(
         Context $context,
         CustomerViewHelper $customerViewHelper,
