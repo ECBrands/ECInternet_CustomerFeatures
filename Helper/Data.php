@@ -14,7 +14,6 @@ use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\CustomerRegistry;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Mail\Template\SenderResolverInterface;
 use Magento\Framework\Mail\Template\TransportBuilder;
 use Magento\Framework\Reflection\DataObjectProcessor;
@@ -38,11 +37,6 @@ class Data extends AbstractHelper
     private $customerRegistry;
 
     /**
-     * @var \Magento\Framework\Mail\Template\SenderResolverInterface
-     */
-    private $senderResolver;
-
-    /**
      * @var \Magento\Framework\Mail\Template\TransportBuilder
      */
     private $transportBuilder;
@@ -63,6 +57,11 @@ class Data extends AbstractHelper
     private $logger;
 
     /**
+     * @var \Magento\Framework\Mail\Template\SenderResolverInterface
+     */
+    private $senderResolver;
+
+    /**
      * Data constructor.
      *
      * @param \Magento\Framework\App\Helper\Context                         $context
@@ -71,7 +70,8 @@ class Data extends AbstractHelper
      * @param \Magento\Framework\Mail\Template\TransportBuilder             $transportBuilder
      * @param \Magento\Framework\Reflection\DataObjectProcessor             $dataProcessor
      * @param \Magento\Store\Model\StoreManagerInterface                    $storeManager
-     * @param \Magento\Framework\Mail\Template\SenderResolverInterface|null $senderResolver
+     * @param \ECInternet\CustomerFeatures\Logger\Logger                    $logger
+     * @param \Magento\Framework\Mail\Template\SenderResolverInterface      $senderResolver
      */
     public function __construct(
         Context $context,
@@ -81,7 +81,7 @@ class Data extends AbstractHelper
         DataObjectProcessor $dataProcessor,
         StoreManagerInterface $storeManager,
         Logger $logger,
-        ?SenderResolverInterface $senderResolver = null
+        SenderResolverInterface $senderResolver
     ) {
         parent::__construct($context);
 
@@ -91,7 +91,7 @@ class Data extends AbstractHelper
         $this->dataProcessor      = $dataProcessor;
         $this->storeManager       = $storeManager;
         $this->logger             = $logger;
-        $this->senderResolver     = $senderResolver ?: ObjectManager::getInstance()->get(SenderResolverInterface::class); //FIXME: Done this way by core Magento 2 in Magento\Customer\Model\EmailNotification -- We should fix this our own way.
+        $this->senderResolver     = $senderResolver;
     }
 
     /**
