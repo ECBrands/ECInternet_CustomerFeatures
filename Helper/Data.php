@@ -37,6 +37,11 @@ class Data extends AbstractHelper
     private $customerRegistry;
 
     /**
+     * @var \Magento\Framework\Mail\Template\SenderResolverInterface
+     */
+    private $senderResolver;
+
+    /**
      * @var \Magento\Framework\Mail\Template\TransportBuilder
      */
     private $transportBuilder;
@@ -57,11 +62,6 @@ class Data extends AbstractHelper
     private $logger;
 
     /**
-     * @var \Magento\Framework\Mail\Template\SenderResolverInterface
-     */
-    private $senderResolver;
-
-    /**
      * Data constructor.
      *
      * @param \Magento\Framework\App\Helper\Context                         $context
@@ -77,21 +77,21 @@ class Data extends AbstractHelper
         Context $context,
         CustomerViewHelper $customerViewHelper,
         CustomerRegistry $customerRegistry,
+        SenderResolverInterface $senderResolver,
         TransportBuilder $transportBuilder,
         DataObjectProcessor $dataProcessor,
         StoreManagerInterface $storeManager,
         Logger $logger,
-        SenderResolverInterface $senderResolver
     ) {
         parent::__construct($context);
 
         $this->customerViewHelper = $customerViewHelper;
         $this->customerRegistry   = $customerRegistry;
+        $this->senderResolver     = $senderResolver;
         $this->transportBuilder   = $transportBuilder;
         $this->dataProcessor      = $dataProcessor;
         $this->storeManager       = $storeManager;
         $this->logger             = $logger;
-        $this->senderResolver     = $senderResolver;
     }
 
     /**
