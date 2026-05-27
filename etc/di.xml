@@ -15,4 +15,28 @@
 		<plugin name="ecinternet_customerfeatures-customer_model_emailnotification"
 		        type="ECInternet\CustomerFeatures\Plugin\Customer\Model\EmailNotificationPlugin" />
 	</type>
+
+	<!-- aroundIsValid() - Bypass city validation -->
+	<type name="Magento\Customer\Model\Validator\City">
+		<plugin name="ecinternet_customerfeatures-customer_validator_city"
+		        type="ECInternet\CustomerFeatures\Plugin\Customer\Model\Validator\CityPlugin" />
+	</type>
+
+	<!-- aroundIsValid() - Bypass name validation -->
+	<type name="Magento\Customer\Model\Validator\Name">
+		<plugin name="ecinternet_customerfeatures-customer_validator_name"
+		        type="ECInternet\CustomerFeatures\Plugin\Customer\Model\Validator\NamePlugin" />
+	</type>
+
+	<!-- aroundIsValid() - Bypass street validation -->
+	<type name="Magento\Customer\Model\Validator\Street">
+		<plugin name="ecinternet_customerfeatures-customer_validator_street"
+		        type="ECInternet\CustomerFeatures\Plugin\Customer\Model\Validator\StreetPlugin" />
+	</type>
+
+	<!-- aroundIsValid() - Bypass telephone validation -->
+	<type name="Magento\Customer\Model\Validator\Telephone">
+		<plugin name="ecinternet_customerfeatures-customer_validator_telephone"
+		        type="ECInternet\CustomerFeatures\Plugin\Customer\Model\Validator\TelephonePlugin" />
+	</type>
 </config>

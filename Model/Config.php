@@ -39,6 +39,14 @@ class Config
 
     private const CONFIG_PATH_ACTIVATION_CRON_MAX_EMAILS    = 'customer_features/account_activation/cron_customers_per';
 
+    private const CONFIG_PATH_BYPASS_CITY_VALIDATION        = 'customer_features/validator/bypass_city_validation';
+
+    private const CONFIG_PATH_BYPASS_NAME_VALIDATION        = 'customer_features/validator/bypass_name_validation';
+
+    private const CONFIG_PATH_BYPASS_STREET_VALIDATION      = 'customer_features/validator/bypass_street_validation';
+
+    private const CONFIG_PATH_BYPASS_TELEPHONE_VALIDATION   = 'customer_features/validator/bypass_telephone_validation';
+
     public const ATTRIBUTE_CUSTOMER_COMPANY_NAME            = 'ecinternet_company_name';
 
     public const ATTRIBUTE_CUSTOMER_ACTIVATION_EMAIL_SENT   = 'ecinternet_cust_active_sent';
@@ -196,5 +204,45 @@ class Config
     public function limitEditAddressGroups()
     {
         return (string)$this->scopeConfig->getValue(self::CONFIG_PATH_LIMIT_EDIT_CUSTOMER_GROUPS);
+    }
+
+    /**
+     * Should we bypass city validation?
+     *
+     * @return bool
+     */
+    public function shouldBypassCityValidation()
+    {
+        return $this->scopeConfig->isSetFlag(self::CONFIG_PATH_BYPASS_CITY_VALIDATION);
+    }
+
+    /**
+     * Should we bypass name validation?
+     *
+     * @return bool
+     */
+    public function shouldBypassNameValidation()
+    {
+        return $this->scopeConfig->isSetFlag(self::CONFIG_PATH_BYPASS_NAME_VALIDATION);
+    }
+
+    /**
+     * Should we bypass street validation?
+     *
+     * @return bool
+     */
+    public function shouldBypassStreetValidation()
+    {
+        return $this->scopeConfig->isSetFlag(self::CONFIG_PATH_BYPASS_STREET_VALIDATION);
+    }
+
+    /**
+     * Should we bypass telephone validation?
+     *
+     * @return bool
+     */
+    public function shouldBypassTelephoneValidation()
+    {
+        return $this->scopeConfig->isSetFlag(self::CONFIG_PATH_BYPASS_TELEPHONE_VALIDATION);
     }
 }

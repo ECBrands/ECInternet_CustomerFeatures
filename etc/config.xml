@@ -11,6 +11,12 @@
 				<activation_notice_template>customer_account_activate_email_cron_template</activation_notice_template>
 				<cron_customers_per>15</cron_customers_per>
 			</account_activation>
+			<validator>
+				<bypass_city_validation>0</bypass_city_validation>
+				<bypass_name_validation>0</bypass_name_validation>
+				<bypass_street_validation>0</bypass_street_validation>
+				<bypass_telephone_validation>0</bypass_telephone_validation>
+			</validator>
 		</customer_features>
 	</default>
 </config>

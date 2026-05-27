@@ -105,6 +105,29 @@
 					<label>Max emails per cron run</label>
 				</field>
 			</group>
+			<group id="validator" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+				<label>Field Validation</label>
+				<field id="bypass_city_validation" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+					<label>Bypass City Validation</label>
+					<comment>When enabled, the city field will accept any characters without validation.</comment>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+				</field>
+				<field id="bypass_name_validation" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+					<label>Bypass Name Validation</label>
+					<comment>When enabled, the first, middle, and last name fields will accept any characters without validation.</comment>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+				</field>
+				<field id="bypass_street_validation" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+					<label>Bypass Street Validation</label>
+					<comment>When enabled, the street address field will accept any characters without validation.</comment>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+				</field>
+				<field id="bypass_telephone_validation" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+					<label>Bypass Telephone Validation</label>
+					<comment>When enabled, the telephone field will accept any characters without validation.</comment>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+				</field>
+			</group>
 		</section>
 	</system>
 </config>
