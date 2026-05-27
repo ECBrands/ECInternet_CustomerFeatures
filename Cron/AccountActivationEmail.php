@@ -81,18 +81,14 @@ class AccountActivationEmail
      */
     public function execute()
     {
-        $this->log('execute()');
-
         if (!$this->config->isAccountActivationCronEnabled()) {
-            $this->log('execute() - Account Activate cron disabled.');
-
             return $this;
         }
 
+        // Max emails set per run, defaults to 10 if not set in admin
         $maxEmailCount = $this->getMaxEmailCount();
-        $this->log('execute()', ['maxEmailsPerCronRun' => $maxEmailCount]);
 
-        // Load unactivated customers.
+        // Load unactivated customers
         $customers = $this->getCronJobCustomers($maxEmailCount);
 
         /** @var \Magento\Customer\Model\Customer $customer */
@@ -164,8 +160,6 @@ class AccountActivationEmail
     private function markCustomerActivationEmailSent(
         CustomerInterface $customer
     ) {
-        $this->log('markCustomerActivationEmailSent()', ['customerId' => $customer->getId()]);
-
         $customer->setCustomAttribute(Config::ATTRIBUTE_CUSTOMER_ACTIVATION_EMAIL_SENT, 1);
         $this->customerRepository->save($customer);
     }
@@ -180,6 +174,6 @@ class AccountActivationEmail
      */
     private function log(string $message, array $extra = [])
     {
-        $this->logger->info('Cron/AccountActivationEmail - ' . $message, $extra);
+        $this->logger->info('CustomerFeatures - Cron/AccountActivationEmail - ' . $message, $extra);
     }
 }
