@@ -54,7 +54,7 @@ class EmailNotificationPlugin
         /* @noinspection PhpMissingParamTypeInspection */ $storeId = null,
         /* @noinspection PhpMissingParamTypeInspection */ $sendemailStoreId = null
     ): void {
-        if ($this->config->isModuleEnabled() || $this->config->disableCustomerWelcomeEmail()) {
+        if ($this->config->isModuleEnabled() && $this->config->disableCustomerWelcomeEmail()) {
             return;
         }
 
