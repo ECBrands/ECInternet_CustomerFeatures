@@ -68,14 +68,13 @@ class ECInternetCompanyName extends Column
     {
         if (isset($dataSource['data']['items'])) {
             foreach ($dataSource['data']['items'] as &$item) {
-                /** @var \Magento\Sales\Api\Data\OrderInterface $order */
-                $order = $this->orderRepository->get($item['entity_id']);
-
-                // Extract ecinternet_company_name
-                $ecinternetCompanyName = $this->getECInternetCompanyName($order);
-
-                // Assign to item
-                $item[$this->getData('name')] = $ecinternetCompanyName;
+                if (is_numeric($item['entity_id'])) {
+                    /** @var \Magento\Sales\Api\Data\OrderInterface $order */
+                    if ($order = $this->getOrder((int)$item['entity_id'])) {
+                        // Extract ecinternet_company_name and assign to item
+                        $item[$this->getData('name')] = $this->getECInternetCompanyName($order);
+                    }
+                }
             }
         }
 
@@ -105,7 +104,25 @@ class ECInternetCompanyName extends Column
     }
 
     /**
-     * Retrieve Customer using CustomerRepository.
+     * Retrieve OrderInterface using OrderRepository.
+     *
+     * @param int $orderId
+     *
+     * @return \Magento\Sales\Api\Data\OrderInterface|null
+     */
+    private function getOrder(int $orderId)
+    {
+        try {
+            return $this->orderRepository->get($orderId);
+        } catch (Exception $e) {
+            error_log("getOrder() - Unable to lookup order by id: {$e->getMessage()}");
+        }
+
+        return null;
+    }
+
+    /**
+     * Retrieve CustomerInterface using CustomerRepository.
      *
      * @param int $customerId
      *
