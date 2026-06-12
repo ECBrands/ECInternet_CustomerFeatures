@@ -70,18 +70,28 @@ class ECInternetCompanyName extends Column
     {
         if (isset($dataSource['data']['items'])) {
             foreach ($dataSource['data']['items'] as &$item) {
-                /** @var \Magento\Sales\Api\Data\OrderInterface $order */
-                $order = $this->orderRepository->get($item['entity_id']);
-
-                // Extract ecinternet_company_name
-                $ecinternetCompanyName = $this->getECInternetCompanyName($order);
-
-                // Assign to item
-                $item[$this->getData('name')] = $ecinternetCompanyName;
+                if (is_numeric($item['entity_id'])) {
+                    /** @var \Magento\Sales\Api\Data\OrderInterface $order */
+                    if ($order = $this->getOrderById((int)$item['entity_id'])) {
+                        // Extract ecinternet_company_name and assign to item
+                        $item[$this->getData('name')] = $this->getECInternetCompanyName($order);
+                    }
+                }
             }
         }
 
         return $dataSource;
+    }
+
+    private function getOrderById(int $orderId)
+    {
+        try {
+            return $this->orderRepository->get($orderId);
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+        }
+
+        return null;
     }
 
     /**

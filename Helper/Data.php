@@ -7,13 +7,13 @@ declare(strict_types=1);
 
 namespace ECInternet\CustomerFeatures\Helper;
 
+use ECInternet\CustomerFeatures\Logger\Logger;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Helper\View as CustomerViewHelper;
 use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\CustomerRegistry;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Mail\Template\SenderResolverInterface;
 use Magento\Framework\Mail\Template\TransportBuilder;
 use Magento\Framework\Reflection\DataObjectProcessor;
@@ -57,33 +57,41 @@ class Data extends AbstractHelper
     private $storeManager;
 
     /**
+     * @var \ECInternet\CustomerFeatures\Logger\Logger
+     */
+    private $logger;
+
+    /**
      * Data constructor.
      *
-     * @param \Magento\Framework\App\Helper\Context                         $context
-     * @param \Magento\Customer\Helper\View                                 $customerViewHelper
-     * @param \Magento\Customer\Model\CustomerRegistry                      $customerRegistry
-     * @param \Magento\Framework\Mail\Template\TransportBuilder             $transportBuilder
-     * @param \Magento\Framework\Reflection\DataObjectProcessor             $dataProcessor
-     * @param \Magento\Store\Model\StoreManagerInterface                    $storeManager
-     * @param \Magento\Framework\Mail\Template\SenderResolverInterface|null $senderResolver
-     */
+     * @param \Magento\Framework\App\Helper\Context                    $context
+     * @param \Magento\Customer\Helper\View                            $customerViewHelper
+     * @param \Magento\Customer\Model\CustomerRegistry                 $customerRegistry
+     * @param \Magento\Framework\Mail\Template\SenderResolverInterface $senderResolver
+     * @param \Magento\Framework\Mail\Template\TransportBuilder        $transportBuilder
+     * @param \Magento\Framework\Reflection\DataObjectProcessor        $dataProcessor
+     * @param \Magento\Store\Model\StoreManagerInterface               $storeManager
+     * @param \ECInternet\CustomerFeatures\Logger\Logger               $logger
+ */
     public function __construct(
         Context $context,
         CustomerViewHelper $customerViewHelper,
         CustomerRegistry $customerRegistry,
+        SenderResolverInterface $senderResolver,
         TransportBuilder $transportBuilder,
         DataObjectProcessor $dataProcessor,
         StoreManagerInterface $storeManager,
-        SenderResolverInterface $senderResolver = null
+        Logger $logger,
     ) {
         parent::__construct($context);
 
         $this->customerViewHelper = $customerViewHelper;
         $this->customerRegistry   = $customerRegistry;
+        $this->senderResolver     = $senderResolver;
         $this->transportBuilder   = $transportBuilder;
         $this->dataProcessor      = $dataProcessor;
         $this->storeManager       = $storeManager;
-        $this->senderResolver     = $senderResolver ?: ObjectManager::getInstance()->get(SenderResolverInterface::class); //FIXME: Done this way by core Magento 2 in Magento\Customer\Model\EmailNotification -- We should fix this our own way.
+        $this->logger             = $logger;
     }
 
     /**
@@ -107,18 +115,19 @@ class Data extends AbstractHelper
             $storeId = $customer->getStoreId();
         }
 
-        if (is_numeric($storeId)) {
-            $customerEmailData = $this->getFullCustomerObject($customer);
-            $this->sendEmailTemplate(
-                $customer,
-                $template,
-                Customer::XML_PATH_FORGOT_EMAIL_IDENTITY,
-                ['customer' => $customerEmailData, 'store' => $this->storeManager->getStore($storeId)],
-                (int)$storeId
-            );
-        } else {
+        if (!is_numeric($storeId)) {
             $this->log('sendEmail() - Non-numeric Store ID', ['storeId' => $storeId]);
+            return;
         }
+
+        $customerEmailData = $this->getFullCustomerObject($customer);
+        $this->sendEmailTemplate(
+            $customer,
+            $template,
+            Customer::XML_PATH_FORGOT_EMAIL_IDENTITY,
+            ['customer' => $customerEmailData, 'store' => $this->storeManager->getStore($storeId)],
+            (int)$storeId
+        );
     }
 
     /**
@@ -201,6 +210,6 @@ class Data extends AbstractHelper
      */
     private function log(string $message, array $extra = [])
     {
-        $this->_logger->info('Helper/Data - ' . $message, $extra);
+        $this->logger->info('Helper/Data - ' . $message, $extra);
     }
 }
