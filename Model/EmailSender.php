@@ -5,26 +5,20 @@
  */
 declare(strict_types=1);
 
-namespace ECInternet\CustomerFeatures\Helper;
+namespace ECInternet\CustomerFeatures\Model;
 
-use ECInternet\CustomerFeatures\Logger\Logger;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Helper\View as CustomerViewHelper;
 use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\CustomerRegistry;
-use Magento\Framework\App\Helper\AbstractHelper;
-use Magento\Framework\App\Helper\Context;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Mail\Template\SenderResolverInterface;
 use Magento\Framework\Mail\Template\TransportBuilder;
 use Magento\Framework\Reflection\DataObjectProcessor;
 use Magento\Store\Model\StoreManagerInterface;
+use ECInternet\CustomerFeatures\Logger\Logger;
 
-/**
- * Helper
- *
- * @SuppressWarnings(PHPMD.LongVariable)
- */
-class Data extends AbstractHelper
+class EmailSender
 {
     /**
      * @var \Magento\Customer\Helper\View
@@ -35,6 +29,11 @@ class Data extends AbstractHelper
      * @var \Magento\Customer\Model\CustomerRegistry
      */
     private $customerRegistry;
+
+    /**
+     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     */
+    private $scopeConfig;
 
     /**
      * @var \Magento\Framework\Mail\Template\SenderResolverInterface
@@ -62,31 +61,30 @@ class Data extends AbstractHelper
     private $logger;
 
     /**
-     * Data constructor.
+     * EmailSender constructor.
      *
-     * @param \Magento\Framework\App\Helper\Context                    $context
      * @param \Magento\Customer\Helper\View                            $customerViewHelper
      * @param \Magento\Customer\Model\CustomerRegistry                 $customerRegistry
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface       $scopeConfig
      * @param \Magento\Framework\Mail\Template\SenderResolverInterface $senderResolver
      * @param \Magento\Framework\Mail\Template\TransportBuilder        $transportBuilder
      * @param \Magento\Framework\Reflection\DataObjectProcessor        $dataProcessor
      * @param \Magento\Store\Model\StoreManagerInterface               $storeManager
      * @param \ECInternet\CustomerFeatures\Logger\Logger               $logger
- */
+     */
     public function __construct(
-        Context $context,
         CustomerViewHelper $customerViewHelper,
         CustomerRegistry $customerRegistry,
+        ScopeConfigInterface $scopeConfig,
         SenderResolverInterface $senderResolver,
         TransportBuilder $transportBuilder,
         DataObjectProcessor $dataProcessor,
         StoreManagerInterface $storeManager,
         Logger $logger,
     ) {
-        parent::__construct($context);
-
         $this->customerViewHelper = $customerViewHelper;
         $this->customerRegistry   = $customerRegistry;
+        $this->scopeConfig        = $scopeConfig;
         $this->senderResolver     = $senderResolver;
         $this->transportBuilder   = $transportBuilder;
         $this->dataProcessor      = $dataProcessor;
@@ -210,6 +208,6 @@ class Data extends AbstractHelper
      */
     private function log(string $message, array $extra = [])
     {
-        $this->logger->info('Helper/Data - ' . $message, $extra);
+        $this->logger->info('Model/EmailSender - ' . $message, $extra);
     }
 }

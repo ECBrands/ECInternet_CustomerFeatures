@@ -11,9 +11,9 @@ use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CustomerCollectionFactory;
 use Magento\Framework\Exception\LocalizedException;
-use ECInternet\CustomerFeatures\Helper\Data;
 use ECInternet\CustomerFeatures\Logger\Logger;
 use ECInternet\CustomerFeatures\Model\Config;
+use ECInternet\CustomerFeatures\Model\EmailSender;
 use Exception;
 
 /**
@@ -37,11 +37,6 @@ class AccountActivationEmail
     private $customerCollectionFactory;
 
     /**
-     * @var \ECInternet\CustomerFeatures\Helper\Data
-     */
-    private $helper;
-
-    /**
      * @var \ECInternet\CustomerFeatures\Logger\Logger
      */
     private $logger;
@@ -52,26 +47,31 @@ class AccountActivationEmail
     private $config;
 
     /**
+     * @var \ECInternet\CustomerFeatures\Model\EmailSender
+     */
+    private $emailSender;
+
+    /**
      * AccountActivationEmail constructor.
      *
      * @param \Magento\Customer\Api\CustomerRepositoryInterface                $customerRepository
      * @param \Magento\Customer\Model\ResourceModel\Customer\CollectionFactory $customerCollectionFactory
-     * @param \ECInternet\CustomerFeatures\Helper\Data                         $helper
      * @param \ECInternet\CustomerFeatures\Logger\Logger                       $logger
      * @param \ECInternet\CustomerFeatures\Model\Config                        $config
+     * @param \ECInternet\CustomerFeatures\Model\EmailSender                   $emailSender
      */
     public function __construct(
         CustomerRepositoryInterface $customerRepository,
         CustomerCollectionFactory $customerCollectionFactory,
-        Data $helper,
         Logger $logger,
-        Config $config
+        Config $config,
+        EmailSender $emailSender,
     ) {
         $this->customerRepository        = $customerRepository;
         $this->customerCollectionFactory = $customerCollectionFactory;
-        $this->helper                    = $helper;
         $this->logger                    = $logger;
         $this->config                    = $config;
+        $this->emailSender               = $emailSender;
     }
 
     /**
@@ -168,7 +168,7 @@ class AccountActivationEmail
     ) {
         $this->log('sendAccountActivationNoticeEmail()');
 
-        $this->helper->sendEmail($customer, self::CONFIG_PATH_ACTIVATION_NOTICE_TEMPLATE);
+        $this->emailSender->sendEmail($customer, self::CONFIG_PATH_ACTIVATION_NOTICE_TEMPLATE);
     }
 
     /**

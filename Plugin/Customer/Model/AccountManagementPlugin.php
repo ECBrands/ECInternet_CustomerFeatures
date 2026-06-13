@@ -17,9 +17,9 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\State\UserLockedException;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use ECInternet\CustomerFeatures\Helper\Data;
 use ECInternet\CustomerFeatures\Logger\Logger;
 use ECInternet\CustomerFeatures\Model\Config;
+use ECInternet\CustomerFeatures\Model\EmailSender;
 use Exception;
 
 /**
@@ -47,11 +47,6 @@ class AccountManagementPlugin
     private $storeManager;
 
     /**
-     * @var \ECInternet\CustomerFeatures\Helper\Data
-     */
-    private $helper;
-
-    /**
      * @var \ECInternet\CustomerFeatures\Logger\Logger
      */
     private $logger;
@@ -62,29 +57,34 @@ class AccountManagementPlugin
     private $config;
 
     /**
+     * @var \ECInternet\CustomerFeatures\Model\EmailSender
+     */
+    private $emailSender;
+
+    /**
      * AccountManagementPlugin constructor.
      *
      * @param \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository
      * @param \Magento\Framework\Message\ManagerInterface       $messageManager
      * @param \Magento\Store\Model\StoreManagerInterface        $storeManager
-     * @param \ECInternet\CustomerFeatures\Helper\Data          $helper
      * @param \ECInternet\CustomerFeatures\Logger\Logger        $logger
      * @param \ECInternet\CustomerFeatures\Model\Config         $config
+     * @param \ECInternet\CustomerFeatures\Model\EmailSender    $emailSender
      */
     public function __construct(
         CustomerRepositoryInterface $customerRepository,
         ManagerInterface $messageManager,
         StoreManagerInterface $storeManager,
-        Data $helper,
         Logger $logger,
-        Config $config
+        Config $config,
+        EmailSender $emailSender,
     ) {
         $this->customerRepository = $customerRepository;
         $this->messageManager     = $messageManager;
         $this->storeManager       = $storeManager;
-        $this->helper             = $helper;
         $this->logger             = $logger;
         $this->config             = $config;
+        $this->emailSender        = $emailSender;
     }
 
     /**
@@ -273,7 +273,7 @@ class AccountManagementPlugin
     ) {
         $this->log('sendAccountActivationConfirmationEmail()');
 
-        $this->helper->sendEmail($customer, self::CONFIG_PATH_ACTIVATION_TEMPLATE);
+        $this->emailSender->sendEmail($customer, self::CONFIG_PATH_ACTIVATION_TEMPLATE);
     }
 
     /**
