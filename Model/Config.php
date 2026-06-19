@@ -55,11 +55,18 @@ class Config
 
     public const ATTRIBUTE_CUSTOMER_IS_ACTIVE               = 'ecinternet_is_active';
 
+    public const EMAIL_ACTIVATION_TEMPLATE                  = 'email_activate';
+
     /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
      */
     private $scopeConfig;
 
+    /**
+     * Config constructor.
+     *
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     */
     public function __construct(
         ScopeConfigInterface $scopeConfig
     ) {
@@ -97,41 +104,11 @@ class Config
     }
 
     /**
-     * Is account activation enabled?
-     *
-     * @return bool
-     */
-    public function isAccountActivationEnabled()
-    {
-        return $this->scopeConfig->isSetFlag(self::CONFIG_PATH_ACTIVATION_ENABLE);
-    }
-
-    /**
-     * Is account activation cron enabled?
-     *
-     * @return bool
-     */
-    public function isAccountActivationCronEnabled()
-    {
-        return $this->scopeConfig->isSetFlag(self::CONFIG_PATH_ACTIVATION_ENABLE_CRON);
-    }
-
-    /**
-     * Get the account activation cron max email limit
-     *
-     * @return int
-     */
-    public function getAccountActivationCronMaxEmails()
-    {
-        return (int)$this->scopeConfig->getValue(self::CONFIG_PATH_ACTIVATION_CRON_MAX_EMAILS);
-    }
-
-    /**
      * Should we disallow Customer registration?
      *
      * @return bool
      */
-    public function disableCustomerRegistration()
+    public function shouldDisableCustomerRegistration()
     {
         return $this->scopeConfig->isSetFlag(self::CONFIG_PATH_DISABLE_REGISTRATION);
     }
@@ -141,7 +118,7 @@ class Config
      *
      * @return bool
      */
-    public function disableCustomerWelcomeEmail()
+    public function shouldDisableCustomerWelcomeEmail()
     {
         return $this->scopeConfig->isSetFlag(self::CONFIG_PATH_DISABLE_WELCOME_EMAIL);
     }
@@ -181,7 +158,7 @@ class Config
      *
      * @return string
      */
-    public function limitAddAddressGroups()
+    public function getLimitAddAddressGroups()
     {
         return (string)$this->scopeConfig->getValue(self::CONFIG_PATH_LIMIT_ADD_CUSTOMER_GROUPS);
     }
@@ -201,9 +178,39 @@ class Config
      *
      * @return string
      */
-    public function limitEditAddressGroups()
+    public function getLimitEditAddressGroups()
     {
         return (string)$this->scopeConfig->getValue(self::CONFIG_PATH_LIMIT_EDIT_CUSTOMER_GROUPS);
+    }
+
+    /**
+     * Is account activation enabled?
+     *
+     * @return bool
+     */
+    public function isAccountActivationEnabled()
+    {
+        return $this->scopeConfig->isSetFlag(self::CONFIG_PATH_ACTIVATION_ENABLE);
+    }
+
+    /**
+     * Is account activation cron enabled?
+     *
+     * @return bool
+     */
+    public function isAccountActivationCronEnabled()
+    {
+        return $this->scopeConfig->isSetFlag(self::CONFIG_PATH_ACTIVATION_ENABLE_CRON);
+    }
+
+    /**
+     * Get the account activation cron max email limit
+     *
+     * @return int
+     */
+    public function getAccountActivationCronMaxEmails()
+    {
+        return (int)$this->scopeConfig->getValue(self::CONFIG_PATH_ACTIVATION_CRON_MAX_EMAILS);
     }
 
     /**

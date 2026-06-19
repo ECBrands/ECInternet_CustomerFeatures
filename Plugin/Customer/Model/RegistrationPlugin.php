@@ -43,7 +43,7 @@ class RegistrationPlugin
         /** @noinspection PhpUnusedParameterInspection */ Registration $subject,
         bool $result
     ) {
-        if ($this->config->isModuleEnabled() && $this->config->disableCustomerRegistration()) {
+        if ($this->config->isModuleEnabled() && $this->config->shouldDisableCustomerRegistration()) {
             return false;
         }
 

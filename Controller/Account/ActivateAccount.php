@@ -15,7 +15,7 @@ use Magento\Customer\Controller\Account\ForgotPassword;
 class ActivateAccount extends ForgotPassword
 {
     /**
-     * Activate account page
+     * Activate customer account page
      *
      * @return \Magento\Framework\View\Result\Page
      */

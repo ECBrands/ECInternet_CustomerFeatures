@@ -16,7 +16,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\SecurityViolationException;
 use Magento\Framework\Validator\EmailAddress;
 use Magento\Framework\Validator\ValidatorChain;
-use ECInternet\CustomerFeatures\Helper\Data;
+use ECInternet\CustomerFeatures\Model\Config;
 use Exception;
 use Psr\Log\LoggerInterface;
 
@@ -54,7 +54,7 @@ class ActivateAccountPost extends ForgotPasswordPost
     }
 
     /**
-     * Forgot customer password action
+     * Activate customer account action
      *
      * @return \Magento\Framework\Controller\Result\Redirect
      * @throws \Magento\Framework\Validator\ValidateException
@@ -76,12 +76,11 @@ class ActivateAccountPost extends ForgotPasswordPost
             }
 
             try {
-                $this->customerAccountManagement->initiatePasswordReset(
-                    $email,
-                    Data::EMAIL_ACTIVATE_TEMPLATE
-                );
+                //TODO: Why are we using initiatePasswordReset here?
+                $this->customerAccountManagement->initiatePasswordReset($email, Config::EMAIL_ACTIVATION_TEMPLATE);
             } catch (NoSuchEntityException $exception) {
-                // Do nothing, we don't want anyone to use this action to determine which email accounts are registered.
+                // Customer could not be found by email. Don't set error message because
+                // we don't want anyone to use this action to determine which email accounts are registered.
                 $this->log("NoSuchEntityException found - {$exception->getMessage()}.");
             } catch (SecurityViolationException $exception) {
                 $this->messageManager->addErrorMessage($exception->getMessage());
@@ -100,6 +99,7 @@ class ActivateAccountPost extends ForgotPasswordPost
             return $resultRedirect->setPath('*/*/');
         } else {
             $this->messageManager->addErrorMessage(__('Please enter your email.'));
+
             return $resultRedirect->setPath('*/*/activateaccount');
         }
     }
