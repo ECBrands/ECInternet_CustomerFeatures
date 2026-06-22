@@ -195,9 +195,8 @@ class EmailSender
      * Write to extension log
      *
      * @param string $message
-     * @param array  $extra
      */
-    private function log(string $message, array $extra = [])
+    private function log(string $message)
     {
         error_log($message);
     }

@@ -36,6 +36,9 @@ class CityPlugin
      * @param Customer $customer
      *
      * @return bool
+     *
+     * @noinspection PhpUnusedParameterInspection
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundIsValid(City $subject, callable $proceed, mixed $customer)
     {

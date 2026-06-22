@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace ECInternet\CustomerFeatures\Plugin\Customer\Model\Validator;
 
-use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\Validator\Name;
 use ECInternet\CustomerFeatures\Model\Config;
 
@@ -41,6 +40,9 @@ class NamePlugin
      * @param mixed    $customer
      *
      * @return bool
+     *
+     * @noinspection PhpUnusedParameterInspection
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundIsValid(Name $subject, callable $proceed, mixed $customer)
     {
