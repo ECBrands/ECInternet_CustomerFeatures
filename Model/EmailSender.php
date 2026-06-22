@@ -158,7 +158,7 @@ class EmailSender
         string $template,
         string $sender,
         array $templateParams = [],
-        int $storeId = null
+        ?int $storeId = null
     ) {
         $templateId    = $this->scopeConfig->getValue($template, 'store', $storeId);
         $customerEmail = $customer->getEmail();
@@ -199,6 +199,6 @@ class EmailSender
      */
     private function log(string $message, array $extra = [])
     {
-        //$this->logger->info('Model/EmailSender - ' . $message, $extra);
+        error_log($message);
     }
 }

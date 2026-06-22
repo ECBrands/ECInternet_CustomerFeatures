@@ -44,15 +44,19 @@ class EmailNotificationPlugin
      * @param string                                       $sendemailStoreId
      *
      * @return void
+     *
+     * @noinspection PhpMissingParamTypeInspection
+     * @noinspection PhpUnusedParameterInspection
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundNewAccount(
-        /* @noinspection PhpUnusedParameterInspection */ EmailNotification $subject,
+        EmailNotification $subject,
         callable $proceed,
         CustomerInterface $customer,
-        /* @noinspection PhpMissingParamTypeInspection */ $type = EmailNotification::NEW_ACCOUNT_EMAIL_REGISTERED,
-        /* @noinspection PhpMissingParamTypeInspection */ $backUrl = '',
-        /* @noinspection PhpMissingParamTypeInspection */ $storeId = null,
-        /* @noinspection PhpMissingParamTypeInspection */ $sendemailStoreId = null
+        $type = EmailNotification::NEW_ACCOUNT_EMAIL_REGISTERED,
+        $backUrl = '',
+        $storeId = null,
+        $sendemailStoreId = null
     ): void {
         if ($this->config->isModuleEnabled() && $this->config->shouldDisableCustomerWelcomeEmail()) {
             return;

@@ -96,12 +96,15 @@ class AccountManagementPlugin
      * @return \Magento\Customer\Api\Data\CustomerInterface
      * @throws \Magento\Framework\Exception\InvalidEmailOrPasswordException
      * @throws \Magento\Framework\Exception\LocalizedException
+     *
+     * @noinspection PhpMissingParamTypeInspection
+     * @noinspection PhpUnusedParameterInspection
      */
     public function aroundAuthenticate(
-        /** @noinspection PhpUnusedParameterInspection */ AccountManagement $subject,
+        AccountManagement $subject,
         callable $proceed,
-        /* @noinspection PhpMissingParamTypeInspection */ $username,
-        /* @noinspection PhpMissingParamTypeInspection */ $password
+        $username,
+        $password
     ) {
         $this->log('aroundAuthenticate()');
 
@@ -138,13 +141,16 @@ class AccountManagementPlugin
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @throws \Exception
+     *
+     * @noinspection PhpMissingParamTypeInspection
+     * @noinspection PhpUnusedParameterInspection
      */
     public function aroundInitiatePasswordReset(
-        /** @noinspection PhpUnusedParameterInspection */ AccountManagement $subject,
+        AccountManagement $subject,
         callable $proceed,
-        /* @noinspection PhpMissingParamTypeInspection */ $email,
-        /* @noinspection PhpMissingParamTypeInspection */ $template,
-        /* @noinspection PhpMissingParamTypeInspection */ $websiteId = null
+        $email,
+        $template,
+        $websiteId = null
     ) {
         $this->log('aroundInitiatePasswordReset()', [
             'email'     => $email,
@@ -191,13 +197,16 @@ class AccountManagementPlugin
      * @param string                                    $newPassword
      *
      * @return bool
+     *
+     * @noinspection PhpMissingParamTypeInspection
+     * @noinspection PhpUnusedParameterInspection
      */
     public function aroundResetPassword(
-        /** @noinspection PhpUnusedParameterInspection */ AccountManagement $subject,
+        AccountManagement $subject,
         callable $proceed,
-        /* @noinspection PhpMissingParamTypeInspection */ $email,
-        /* @noinspection PhpMissingParamTypeInspection */ $resetToken,
-        /* @noinspection PhpMissingParamTypeInspection */ $newPassword
+        $email,
+        $resetToken,
+        $newPassword
     ) {
         $this->log('aroundResetPassword()', ['email' => $email]);
 
@@ -220,12 +229,15 @@ class AccountManagementPlugin
      * @param string                                       $redirectUrl
      *
      * @return array
+     *
+     * @noinspection PhpMissingParamTypeInspection
+     * @noinspection PhpUnusedParameterInspection
      */
     public function beforeCreateAccount(
-        /** @noinspection PhpUnusedParameterInspection */ AccountManagement $subject,
+        AccountManagement $subject,
         CustomerInterface $customer,
-        /* @noinspection PhpMissingParamTypeInspection */ $password = null,
-        /* @noinspection PhpMissingParamTypeInspection */ $redirectUrl = ''
+        $password = null,
+        $redirectUrl = ''
     ) {
         $this->log('beforeCreateAccount()');
 
