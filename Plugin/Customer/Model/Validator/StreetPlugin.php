@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace ECInternet\CustomerFeatures\Plugin\Customer\Model\Validator;
 
-use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\Validator\Street;
 use ECInternet\CustomerFeatures\Model\Config;
 
@@ -41,6 +40,8 @@ class StreetPlugin
      * @param mixed    $customer
      *
      * @return bool
+     *
+     * @noinspection PhpUnusedParameterInspection
      */
     public function aroundIsValid(Street $subject, callable $proceed, mixed $customer)
     {
