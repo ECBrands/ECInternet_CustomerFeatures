@@ -16,6 +16,7 @@ use Magento\Framework\Mail\Template\SenderResolverInterface;
 use Magento\Framework\Mail\Template\TransportBuilder;
 use Magento\Framework\Reflection\DataObjectProcessor;
 use Magento\Store\Model\StoreManagerInterface;
+use Psr\Log\LoggerInterface;
 
 class EmailSender
 {
@@ -55,6 +56,11 @@ class EmailSender
     private $storeManager;
 
     /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    private $logger;
+
+    /**
      * EmailSender constructor.
      *
      * @param \Magento\Customer\Helper\View                            $customerViewHelper
@@ -64,6 +70,7 @@ class EmailSender
      * @param \Magento\Framework\Mail\Template\TransportBuilder        $transportBuilder
      * @param \Magento\Framework\Reflection\DataObjectProcessor        $dataProcessor
      * @param \Magento\Store\Model\StoreManagerInterface               $storeManager
+     * @param \Psr\Log\LoggerInterface                                 $logger
      */
     public function __construct(
         CustomerViewHelper $customerViewHelper,
@@ -73,6 +80,7 @@ class EmailSender
         TransportBuilder $transportBuilder,
         DataObjectProcessor $dataProcessor,
         StoreManagerInterface $storeManager,
+        LoggerInterface $logger,
     ) {
         $this->customerViewHelper = $customerViewHelper;
         $this->customerRegistry   = $customerRegistry;
@@ -81,6 +89,7 @@ class EmailSender
         $this->transportBuilder   = $transportBuilder;
         $this->dataProcessor      = $dataProcessor;
         $this->storeManager       = $storeManager;
+        $this->logger             = $logger;
     }
 
     /**
@@ -195,9 +204,12 @@ class EmailSender
      * Write to extension log
      *
      * @param string $message
+     * @param array  $extra
+     *
+     * @return void
      */
-    private function log(string $message)
+    private function log(string $message, array $extra = [])
     {
-        error_log($message);
+        $this->logger->info('[ECInternet_CustomerFeatures] - Model/EmailSender - ' . $message, $extra);
     }
 }
