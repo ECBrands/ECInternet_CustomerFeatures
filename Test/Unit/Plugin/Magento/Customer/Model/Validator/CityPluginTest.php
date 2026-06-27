@@ -5,12 +5,12 @@
  */
 declare(strict_types=1);
 
-namespace ECInternet\CustomerFeatures\Test\Unit\Plugin\Customer\Model\Validator;
+namespace ECInternet\CustomerFeatures\Test\Unit\Plugin\Magento\Customer\Model\Validator;
 
 use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\Validator\City;
 use ECInternet\CustomerFeatures\Model\Config;
-use ECInternet\CustomerFeatures\Plugin\Customer\Model\Validator\CityPlugin;
+use ECInternet\CustomerFeatures\Plugin\Magento\Customer\Model\Validator\CityPlugin;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

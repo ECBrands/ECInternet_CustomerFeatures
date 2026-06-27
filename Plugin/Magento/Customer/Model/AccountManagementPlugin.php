@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace ECInternet\CustomerFeatures\Plugin\Customer\Model;
+namespace ECInternet\CustomerFeatures\Plugin\Magento\Customer\Model;
 
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface;

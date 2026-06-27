@@ -5,11 +5,11 @@
  */
 declare(strict_types=1);
 
-namespace ECInternet\CustomerFeatures\Test\Unit\Plugin\Customer\Model\Validator;
+namespace ECInternet\CustomerFeatures\Test\Unit\Plugin\Magento\Customer\Model\Validator;
 
 use Magento\Customer\Model\Validator\Telephone;
 use ECInternet\CustomerFeatures\Model\Config;
-use ECInternet\CustomerFeatures\Plugin\Customer\Model\Validator\TelephonePlugin;
+use ECInternet\CustomerFeatures\Plugin\Magento\Customer\Model\Validator\TelephonePlugin;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

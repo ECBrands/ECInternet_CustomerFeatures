@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace ECInternet\CustomerFeatures\Plugin\Customer\Model\Validator;
+namespace ECInternet\CustomerFeatures\Plugin\Magento\Customer\Model\Validator;
 
 use Magento\Customer\Model\Validator\Street;
 use ECInternet\CustomerFeatures\Model\Config;
