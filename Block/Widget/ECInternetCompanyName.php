@@ -55,6 +55,11 @@ class ECInternetCompanyName extends AbstractWidget
         $this->customerSession    = $customerSession;
     }
 
+    /**
+     * @return void
+     *
+     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
+     */
     public function _construct()
     {
         parent::_construct();

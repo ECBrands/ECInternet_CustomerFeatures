@@ -6,7 +6,7 @@
 	<!-- aroundResetPassword() - Update 'ecinternet_customer_activated' on the Customer -->
 	<!-- beforeCreateAccount() - Sets custom password value for new Customers -->
 	<type name="Magento\Customer\Model\AccountManagement">
-		<plugin name="ecinternet_customerfeatures-customer_model_accountmanagement"
+		<plugin name="ecinternet_customerfeatures-magento_customer_model_accountmanagement"
 		        type="ECInternet\CustomerFeatures\Plugin\Magento\Customer\Model\AccountManagementPlugin" />
 	</type>
 
@@ -18,25 +18,25 @@
 
 	<!-- aroundIsValid() - Bypass city validation -->
 	<type name="Magento\Customer\Model\Validator\City">
-		<plugin name="ecinternet_customerfeatures-magento_customer_validator_city"
+		<plugin name="ecinternet_customerfeatures-magento_customer_model_validator_city"
 		        type="ECInternet\CustomerFeatures\Plugin\Magento\Customer\Model\Validator\CityPlugin" />
 	</type>
 
 	<!-- aroundIsValid() - Bypass name validation -->
 	<type name="Magento\Customer\Model\Validator\Name">
-		<plugin name="ecinternet_customerfeatures-magento_customer_validator_name"
+		<plugin name="ecinternet_customerfeatures-magento_customer_model_validator_name"
 		        type="ECInternet\CustomerFeatures\Plugin\Magento\Customer\Model\Validator\NamePlugin" />
 	</type>
 
 	<!-- aroundIsValid() - Bypass street validation -->
 	<type name="Magento\Customer\Model\Validator\Street">
-		<plugin name="ecinternet_customerfeatures-magento_customer_validator_street"
+		<plugin name="ecinternet_customerfeatures-magento_customer_model_validator_street"
 		        type="ECInternet\CustomerFeatures\Plugin\Magento\Customer\Model\Validator\StreetPlugin" />
 	</type>
 
 	<!-- aroundIsValid() - Bypass telephone validation -->
 	<type name="Magento\Customer\Model\Validator\Telephone">
-		<plugin name="ecinternet_customerfeatures-magento_customer_validator_telephone"
+		<plugin name="ecinternet_customerfeatures-magento_customer_model_validator_telephone"
 		        type="ECInternet\CustomerFeatures\Plugin\Magento\Customer\Model\Validator\TelephonePlugin" />
 	</type>
 

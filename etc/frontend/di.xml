@@ -12,7 +12,7 @@
 
 	<!-- Disallow Customer registration -->
 	<type name="Magento\Customer\Model\Registration">
-		<plugin name="ecinternet_customerfeatures-customer_model_registration"
+		<plugin name="ecinternet_customerfeatures-magento_customer_model_registration"
 		        type="ECInternet\CustomerFeatures\Plugin\Magento\Customer\Model\RegistrationPlugin" />
 	</type>
 </config>

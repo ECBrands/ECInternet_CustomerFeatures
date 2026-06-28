@@ -42,6 +42,7 @@ class StreetPlugin
      * @return bool
      *
      * @noinspection PhpUnusedParameterInspection
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundIsValid(Street $subject, callable $proceed, mixed $customer)
     {

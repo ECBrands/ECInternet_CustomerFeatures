@@ -99,6 +99,7 @@ class AccountManagementPlugin
      *
      * @noinspection PhpMissingParamTypeInspection
      * @noinspection PhpUnusedParameterInspection
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundAuthenticate(
         AccountManagement $subject,
@@ -144,6 +145,7 @@ class AccountManagementPlugin
      *
      * @noinspection PhpMissingParamTypeInspection
      * @noinspection PhpUnusedParameterInspection
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundInitiatePasswordReset(
         AccountManagement $subject,
@@ -200,6 +202,7 @@ class AccountManagementPlugin
      *
      * @noinspection PhpMissingParamTypeInspection
      * @noinspection PhpUnusedParameterInspection
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundResetPassword(
         AccountManagement $subject,
@@ -232,6 +235,7 @@ class AccountManagementPlugin
      *
      * @noinspection PhpMissingParamTypeInspection
      * @noinspection PhpUnusedParameterInspection
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function beforeCreateAccount(
         AccountManagement $subject,

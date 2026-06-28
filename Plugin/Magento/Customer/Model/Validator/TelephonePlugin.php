@@ -40,6 +40,9 @@ class TelephonePlugin
      * @param mixed     $customer
      *
      * @return bool
+     *
+     * @noinspection PhpUnusedParameterInspection
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundIsValid(Telephone $subject, callable $proceed, mixed $customer)
     {

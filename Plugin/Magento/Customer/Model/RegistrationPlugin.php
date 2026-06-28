@@ -38,9 +38,12 @@ class RegistrationPlugin
      * @param bool                                 $result
      *
      * @return bool
+     *
+     * @noinspection PhpUnusedParameterInspection
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterIsAllowed(
-        /** @noinspection PhpUnusedParameterInspection */ Registration $subject,
+        Registration $subject,
         bool $result
     ) {
         if ($this->config->isModuleEnabled() && $this->config->shouldDisableCustomerRegistration()) {

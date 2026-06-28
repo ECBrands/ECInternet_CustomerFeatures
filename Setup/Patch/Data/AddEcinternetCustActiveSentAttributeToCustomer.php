@@ -13,6 +13,9 @@ use Magento\Customer\Setup\CustomerSetupFactory;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
 
+/**
+ * @SuppressWarnings(PHPMD.LongClassName)
+ */
 class AddEcinternetCustActiveSentAttributeToCustomer implements DataPatchInterface
 {
     /**
