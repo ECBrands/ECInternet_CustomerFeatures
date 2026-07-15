@@ -15,6 +15,7 @@
     </label>
     <div class="control">
         <?php
+        /** @noinspection PhpFullyQualifiedNameUsageInspection */
         $_validationClass = $escaper->escapeHtmlAttr(
             $this->helper(\Magento\Customer\Helper\Address::class)
                 ->getAttributeValidationClass('ecinternet_company_name')

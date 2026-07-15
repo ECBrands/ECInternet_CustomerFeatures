@@ -115,6 +115,7 @@ class ECInternetCompanyName extends Column
         try {
             return $this->orderRepository->get($orderId);
         } catch (Exception $e) {
+            /** @noinspection ForgottenDebugOutputInspection */
             error_log("getOrder() - Unable to lookup order by id: {$e->getMessage()}");
         }
 
@@ -133,6 +134,7 @@ class ECInternetCompanyName extends Column
         try {
             return $this->customerRepository->getById($customerId);
         } catch (Exception $e) {
+            /** @noinspection ForgottenDebugOutputInspection */
             error_log("getCustomer() - Unable to lookup customer by id: {$e->getMessage()}");
         }
 

@@ -67,7 +67,9 @@ class ActivateAccountPost extends ForgotPasswordPost
         $email = (string)$this->getRequest()->getPost('email');
         if ($email) {
             if (!ValidatorChain::is($email, EmailAddress::class)) {
+                /** @noinspection PhpUndefinedMethodInspection */
                 $this->session->setForgottenEmail($email);
+
                 $this->messageManager->addErrorMessage(
                     __('The email address is incorrect. Verify the email address and try again.')
                 );

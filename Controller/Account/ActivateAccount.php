@@ -18,6 +18,8 @@ class ActivateAccount extends ForgotPassword
      * Activate customer account page
      *
      * @return \Magento\Framework\View\Result\Page
+     *
+     * @noinspection PhpUndefinedMethodInspection
      */
     public function execute()
     {

@@ -58,6 +58,7 @@ class ECInternetCompanyName extends AbstractWidget
     /**
      * @return void
      *
+     * @noinspection MagicMethodsValidityInspection
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      */
     public function _construct()
