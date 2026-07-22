@@ -2,7 +2,7 @@
 	"name": "ecinternet/customerfeatures",
 	"description": "EC Internet Customer Features",
 	"require": {
-		"php": "~8.3.0||~8.4.0",
+		"php": "~8.4.0||~8.5.0",
 		"ecinternet/base": "2.4.9.x-dev"
 	},
 	"type": "magento2-module",
